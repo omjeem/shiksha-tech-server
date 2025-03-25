@@ -1,0 +1,822 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Shiksha Tech API",
+    "description": "API Endpoints for Shiksha Tech School Management System"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User management endpoints"
+    },
+    {
+      "name": "School",
+      "description": "School management endpoints"
+    }
+  ],
+  "paths": {
+    "/user/": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Register a new user",
+        "description": "Register a new user with name, email, and password",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User data.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "user"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "1234"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Standard User": {
+                    "value": {
+                      "message": "User registered successfully",
+                      "data": {
+                        "id": 1,
+                        "name": "John Doe",
+                        "email": "john@example.com"
+                      }
+                    }
+                  },
+                  "New User": {
+                    "value": {
+                      "message": "New User registered successfully",
+                      "data": {
+                        "id": 2,
+                        "name": "Jane Doe",
+                        "email": "jane@example.com"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "example": {
+            "name": "John Doe",
+            "email": "john.doe@example.com",
+            "password": "securePassword123"
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserRequest"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Login a user",
+        "description": "Login with email and password",
+        "responses": {
+          "200": {
+            "description": "User logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User logged in successfully"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "jwt-token-here"
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "john@example.com"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User logged in successfully"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "jwt-token-here"
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "john@example.com"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/school/": {
+      "post": {
+        "tags": [
+          "School"
+        ],
+        "summary": "Create a new school",
+        "description": "Create a new school with the provided details",
+        "responses": {
+          "200": {
+            "description": "School created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "School created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "ABC School"
+                        },
+                        "address": {
+                          "type": "string",
+                          "example": "123 Main St"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "New York"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "School created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "ABC School"
+                        },
+                        "address": {
+                          "type": "string",
+                          "example": "123 Main St"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "New York"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSchoolRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSchoolRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/school/{id}": {
+      "put": {
+        "tags": [
+          "School"
+        ],
+        "summary": "Update school details",
+        "description": "Update an existing school details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "School updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "School updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Updated School Name"
+                        },
+                        "address": {
+                          "type": "string",
+                          "example": "Updated Address"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "Updated City"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "School updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Updated School Name"
+                        },
+                        "address": {
+                          "type": "string",
+                          "example": "Updated Address"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "Updated City"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "example": {},
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSchoolRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSchoolRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegisterUserRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 3
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 255
+                  }
+                }
+              },
+              "email": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "email"
+                  }
+                }
+              },
+              "password": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 8
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 255
+                  }
+                }
+              }
+            }
+          },
+          "required": {
+            "type": "array",
+            "example": [
+              "name",
+              "email",
+              "password"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {
+            "type": "boolean",
+            "example": false
+          },
+          "schema": {
+            "type": "string",
+            "example": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "required": [
+          "schema"
+        ],
+        "xml": {
+          "name": "RegisterUserRequest"
+        }
+      },
+      "LoginUserRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "email"
+                  }
+                }
+              },
+              "password": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 8
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 255
+                  }
+                }
+              }
+            }
+          },
+          "required": {
+            "type": "array",
+            "example": [
+              "email",
+              "password"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {
+            "type": "boolean",
+            "example": false
+          },
+          "schema": {
+            "type": "string",
+            "example": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "required": [
+          "schema"
+        ],
+        "xml": {
+          "name": "LoginUserRequest"
+        }
+      },
+      "CreateSchoolRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 3
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 255
+                  }
+                }
+              },
+              "address": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 3
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 255
+                  }
+                }
+              },
+              "city": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 3
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 255
+                  }
+                }
+              },
+              "state": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 2
+                  }
+                }
+              },
+              "zip": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 10
+                  }
+                }
+              }
+            }
+          },
+          "required": {
+            "type": "array",
+            "example": [
+              "name",
+              "address",
+              "city",
+              "state",
+              "zip"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {
+            "type": "boolean",
+            "example": false
+          },
+          "schema": {
+            "type": "string",
+            "example": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "required": [
+          "schema"
+        ],
+        "xml": {
+          "name": "CreateSchoolRequest"
+        }
+      },
+      "UpdateSchoolRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 3
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 255
+                  }
+                }
+              },
+              "state": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 2
+                  }
+                }
+              },
+              "zip": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "minLength": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "maxLength": {
+                    "type": "number",
+                    "example": 10
+                  }
+                }
+              }
+            }
+          },
+          "required": {
+            "type": "array",
+            "example": [
+              "city",
+              "state",
+              "zip"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {
+            "type": "boolean",
+            "example": false
+          },
+          "schema": {
+            "type": "string",
+            "example": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "required": [
+          "schema"
+        ],
+        "xml": {
+          "name": "UpdateSchoolRequest"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

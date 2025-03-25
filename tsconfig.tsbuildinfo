@@ -1,18 +1,1 @@
-{
-    "root": [
-        "./src/drizzle.config.ts",
-        "./src/index.ts",
-        "./src/config/envconfig.ts",
-        "./src/config/swagger-schemas.ts",
-        "./src/config/utils.ts",
-        "./src/database/db.ts",
-        "./src/database/schema.ts",
-        "./src/middleware/zodvalidator.ts",
-        "./src/router/index.ts",
-        "./src/router/schoolroute.ts",
-        "./src/router/userroute.ts",
-        "./src/validator/schoolvalidator.ts",
-        "./src/validator/uservalidator.ts"
-    ],
-    "version": "5.8.2"
-}
+{"root":["./src/drizzle.config.ts","./src/index.ts","./src/config/envconfig.ts","./src/config/swagger-schemas.ts","./src/config/utils.ts","./src/database/db.ts","./src/database/schema.ts","./src/middleware/zodvalidator.ts","./src/router/index.ts","./src/router/schoolroute.ts","./src/router/userroute.ts","./src/validator/schoolvalidator.ts","./src/validator/uservalidator.ts"],"version":"5.8.2"}

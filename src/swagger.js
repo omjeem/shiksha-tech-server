@@ -1,4 +1,3 @@
-import { envConfigs } from "./config/envConfig";
 
 // Import required libraries
 const swaggerAutogen = require('swagger-autogen')({ openapi: '3.0.0' });
@@ -23,7 +22,7 @@ const doc = {
   },
   servers: [
     {
-      url: `${envConfigs.backend_url}/api/v1`,
+      url: `https://shiksha-tech-server.onrender.com/api/v1`,
       description: 'Development server'
     }
   ],

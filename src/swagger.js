@@ -1,3 +1,5 @@
+import { envConfigs } from "./config/envConfig";
+
 // Import required libraries
 const swaggerAutogen = require('swagger-autogen')({ openapi: '3.0.0' });
 // Need to register ts-node to handle TypeScript files
@@ -21,7 +23,7 @@ const doc = {
   },
   servers: [
     {
-      url: 'http://localhost:3000/api/v1',
+      url: `${envConfigs.backend_url}/api/v1`,
       description: 'Development server'
     }
   ],
@@ -49,7 +51,6 @@ const doc = {
 };
 
 const outputFile = './swagger-output.json';
-// Point to the TypeScript source files
 const routes = ['./router/index.ts'];
 
 const options = {
@@ -58,7 +59,6 @@ const options = {
   autoHeaders: true,
   autoQuery: true,
   autoBody: true,
-  // Load the TypeScript files directly using ts-node
   handlebars: {
     enableCache: false
   }

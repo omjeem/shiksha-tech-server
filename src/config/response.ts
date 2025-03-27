@@ -1,6 +1,5 @@
 import type { Response } from 'express';
 
-// Success response
 export function successResponse(
   res: Response,
   data: any,

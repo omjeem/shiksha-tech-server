@@ -1,12 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const drizzle_kit_1 = require("drizzle-kit");
-const envConfig_1 = require("./src/config/envConfig");
-exports.default = (0, drizzle_kit_1.defineConfig)({
-    out: './drizzle',
-    schema: './src/database/schema.ts',
-    dialect: 'postgresql',
-    dbCredentials: {
-        url: envConfig_1.envConfigs.database_url,
-    },
+import { defineConfig } from 'drizzle-kit';
+import { envConfigs } from './src/config/envConfig';
+
+export default defineConfig({
+  out: './drizzle',
+  schema: './src/database/schema.ts',
+  dialect: 'postgresql',
+  dbCredentials: {
+    url: envConfigs.database_url,
+  },
 });

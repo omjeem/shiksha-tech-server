@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import z, { AnyZodObject, ZodError } from 'zod';
-import { errorResponse } from '../config/utils';
+import { errorResponse } from '../config/response';
 
 // Validate request body, params, query
 export const validateRequest =

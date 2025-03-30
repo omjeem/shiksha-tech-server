@@ -9,7 +9,7 @@ const envVarsSchema = z.object({
     .transform((str) => parseInt(str, 10)),
   DATABASE_URL: z.string(),
   JWT_SECRET: z.string().nonempty(),
-  BACKEND_URL: z.string().nonempty()
+  BACKEND_URL: z.string().nonempty(),
 });
 
 const envVars = envVarsSchema.parse(process.env);
@@ -18,5 +18,5 @@ export const envConfigs = {
   port: envVars.PORT,
   jwt_secret: envVars.JWT_SECRET,
   database_url: envVars.DATABASE_URL,
-  backend_url: envVars.BACKEND_URL
+  backend_url: envVars.BACKEND_URL,
 };

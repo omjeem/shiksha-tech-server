@@ -10,26 +10,31 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { Attendence_Interface, ClassName_Interface, SchoolBoard_Interface, SchoolStaffRole_Interface } from '../utils/interfaces';
+import {
+  Attendence_Enum,
+  ClassName_Enum,
+  SchoolBoard_Enum,
+  SchoolStaffRole_Enum,
+} from '../utils/interfaces';
 
 export const classNameEnum = pgEnum(
   'classNameEnum',
-  Object.values(ClassName_Interface) as [string, ...string[]],
+  Object.values(ClassName_Enum) as [string, ...string[]],
 );
 
 export const schoolBoardEnum = pgEnum(
   'schoolBoardEnum',
-  Object.values(SchoolBoard_Interface) as [string, ...string[]],
+  Object.values(SchoolBoard_Enum) as [string, ...string[]],
 );
 
 export const attendenceEnum = pgEnum(
   'attendenceEnum',
-  Object.values(Attendence_Interface) as [string, ...string[]],
+  Object.values(Attendence_Enum) as [string, ...string[]],
 );
 
 export const schoolStaffRoleEnum = pgEnum(
   'schoolStaffRoleEnum',
-  Object.values(SchoolStaffRole_Interface) as [string, ...string[]],
+  Object.values(SchoolStaffRole_Enum) as [string, ...string[]],
 );
 
 /**
@@ -42,11 +47,11 @@ const timeStamps = {
   updated_at: timestamp(),
   created_at: timestamp().defaultNow().notNull(),
   deleted_at: timestamp(),
-}
+};
 
 /**
  * School Table: Primary entity representing an educational institution
- * 
+ *
  * This is the root table in the schema hierarchy. All other entities
  * (students, staff, classes, etc.) belong to a school.
  */
@@ -55,26 +60,30 @@ export const school = pgTable('school', {
   serial: serial(),
   schoolName: varchar({ length: 255 }).notNull(),
   address: varchar({ length: 255 }).notNull(),
-  websiteLink: varchar({ length: 255 }),
-  contactNumber: varchar({ length: 15 }),
-  contactEmail: varchar({ length: 255 }).notNull().unique(),
+  websiteLink: varchar({ length: 255 }).unique().notNull(),
+  contactNumber: varchar({ length: 15 }).unique().notNull(),
+  contactEmail: varchar({ length: 255 }).notNull().unique().unique().notNull(),
   superAdminName: varchar({ length: 255 }).notNull(),
   superAdminPassword: varchar({ length: 255 }).notNull(),
-  superAdminEmail: varchar({ length: 255 }).unique().notNull(),
-  superAdminContact: varchar({ length: 15 }),
+  superAdminEmail: varchar({ length: 255 })
+    .unique()
+    .notNull()
+    .unique()
+    .notNull(),
+  superAdminContact: varchar({ length: 15 }).unique().notNull(),
   totalStudents: integer().default(0),
   totalTeachers: integer().default(0),
   totalClasses: integer().default(0),
   isDeleted: boolean().default(false),
   isVerified: boolean().default(false),
-  board: schoolBoardEnum("board").notNull(),
+  board: schoolBoardEnum('board').notNull(),
   otherBoard: varchar({ length: 255 }),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Class Table: Represents grade levels within a school
- * 
+ *
  * Relationships:
  * - Many-to-One with School: Each class belongs to one school
  *   (schoolId references school.id with cascade delete)
@@ -89,15 +98,15 @@ export const classes = pgTable('classes', {
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
     .notNull(),
-  clasName: classNameEnum("clasName").notNull(),
+  clasName: classNameEnum('clasName').notNull(),
   totalSection: integer().notNull(),
   totalStudent: integer().notNull(),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Student Table: Represents students enrolled in a school
- * 
+ *
  * Relationships:
  * - Many-to-One with School: Each student belongs to exactly one school
  *   (schoolId references school.id with cascade delete)
@@ -121,12 +130,12 @@ export const student = pgTable('student', {
   admissionClass: integer().notNull(),
   admissionSection: varchar({ length: 5 }).notNull(),
   admissionYear: integer().notNull(),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * School Staff Table: Represents faculty and administrative staff
- * 
+ *
  * Relationships:
  * - Many-to-One with School: Each staff member belongs to one school
  *   (schoolId references +.id with cascade delete)
@@ -143,16 +152,16 @@ export const staff = pgTable('staff', {
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
     .notNull(),
-  role: schoolStaffRoleEnum("role").notNull(),
+  role: schoolStaffRoleEnum('role').notNull(),
   joiningDate: date().notNull(),
   salary: integer().notNull(),
   isDeleted: boolean().default(false),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Class Section Table: Represents divisions within a class (e.g., Class 10-A, 10-B)
- * 
+ *
  * Relationships:
  * - Many-to-One with School: Each section belongs to one school
  *   (schoolId references school.id with cascade delete)
@@ -183,12 +192,12 @@ export const section = pgTable('section', {
   classTeacherId: uuid()
     .references(() => staff.id)
     .notNull(),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Attendance Table: Tracks daily student attendance
- * 
+ *
  * Relationships:
  * - Many-to-One with Student: Each attendance record belongs to one student
  *   (studentId references student.id)
@@ -207,8 +216,8 @@ export const studentAttendence = pgTable('studentAttendence', {
     .references(() => school.id, { onDelete: 'cascade' })
     .notNull(),
   date: date().notNull(),
-  status: attendenceEnum("status").notNull(),
-  ...timeStamps
+  status: attendenceEnum('status').notNull(),
+  ...timeStamps,
 });
 
 export const staffAttendence = pgTable('staffAttendence', {
@@ -217,13 +226,13 @@ export const staffAttendence = pgTable('staffAttendence', {
   staffId: uuid().references(() => staff.id),
   schoolId: uuid().references(() => school.id, { onDelete: 'cascade' }),
   date: date().notNull(),
-  status: attendenceEnum("status").notNull(),
-  ...timeStamps
-})
+  status: attendenceEnum('status').notNull(),
+  ...timeStamps,
+});
 
 /**
  * Class Subject Table: Represents subjects taught in specific classes/sections
- * 
+ *
  * Relationships:
  * - Many-to-One with School: Each subject entry belongs to one school
  *   (schoolId references school.id with cascade delete)
@@ -250,13 +259,13 @@ export const subject = pgTable('subject', {
   teacherId: uuid()
     .references(() => staff.id)
     .notNull(),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Class Subject Teacher Table: Junction table establishing many-to-many relationship
  * between teachers and subjects within specific class/section contexts
- * 
+ *
  * Relationships:
  * - Many-to-One with School: Each relationship belongs to one school
  *   (schoolId references school.id with cascade delete)
@@ -285,12 +294,12 @@ export const subjectTeacher = pgTable('subjectTeacher', {
   teacherId: uuid()
     .references(() => staff.id, { onDelete: 'cascade' })
     .notNull(),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Class Fees Table: Defines fee structure for each class
- * 
+ *
  * Relationships:
  * - Many-to-One with School: Each fee structure belongs to one school
  *   (schoolId references school.id with cascade delete)
@@ -315,12 +324,12 @@ export const fees = pgTable('fees', {
   libraryFees: integer().default(0),
   computerFees: integer().default(0),
   transportFees: integer().default(0),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Due Fees Table: Tracks outstanding fee balances for students
- * 
+ *
  * Relationships:
  * - Many-to-One with Student: Each due fee record belongs to one student
  *   (studentId references student.id with cascade delete)
@@ -352,12 +361,12 @@ export const dues = pgTable('dues', {
     .references(() => fees.id, { onDelete: 'cascade' })
     .notNull(),
   amountLeft: integer().notNull(),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Fees Payment Table: Records fee payments made by students
- * 
+ *
  * Relationships:
  * - Many-to-One with Student: Each payment belongs to one student
  *   (studentId references student.id with cascade delete)
@@ -389,276 +398,306 @@ export const payment = pgTable('payment', {
     .references(() => fees.id, { onDelete: 'cascade' })
     .notNull(),
   amountPaid: integer().notNull(),
-  ...timeStamps
+  ...timeStamps,
 });
 
 /**
  * Define explicit Drizzle ORM relations between tables
- * 
+ *
  * These relation definitions allow for type-safe queries using Drizzle ORM
  * and enable proper JOIN operations between tables.
  */
 
 // School Relations
-export const schoolRelations = relations(school, ({ one, many }: { one: any; many: any }) => ({
-  // One school has many students
-  students: many(student),
+export const schoolRelations = relations(
+  school,
+  ({ one, many }: { one: any; many: any }) => ({
+    // One school has many students
+    students: many(student),
 
-  // One school has many staff members
-  staffMembers: many(staff),
+    // One school has many staff members
+    staffMembers: many(staff),
 
-  // One school has many classes
-  classes: many(classes),
+    // One school has many classes
+    classes: many(classes),
 
-  // One school has many class sections (through classes)
-  classSections: many(section),
+    // One school has many class sections (through classes)
+    classSections: many(section),
 
-  // One school has many attendance records
-  studentAttendanceRecords: many(studentAttendence),
+    // One school has many attendance records
+    studentAttendanceRecords: many(studentAttendence),
 
-  staffAttendenceRecords : many(staffAttendence),
+    staffAttendenceRecords: many(staffAttendence),
 
-  // One school has many class subjects
-  classSubjects: many(subject),
+    // One school has many class subjects
+    classSubjects: many(subject),
 
-  // One school has many class-subject-teacher assignments
-  classSubjectTeachers: many(subjectTeacher),
+    // One school has many class-subject-teacher assignments
+    classSubjectTeachers: many(subjectTeacher),
 
-  // One school has many class fee structures
-  classFees: many(fees),
+    // One school has many class fee structures
+    classFees: many(fees),
 
-  // One school has many due fee records
-  dueFees: many(dues),
+    // One school has many due fee records
+    dueFees: many(dues),
 
-  // One school has many fee payment records
-  feePayments: many(payment),
-}));
+    // One school has many fee payment records
+    feePayments: many(payment),
+  }),
+);
 
 // Class Relations
-export const classRelations = relations(classes, ({ one, many }: { one: any; many: any }) => ({
-  // Many classes belong to one school
-  school: one(school, {
-    fields: [classes.schoolId],
-    references: [school.id],
+export const classRelations = relations(
+  classes,
+  ({ one, many }: { one: any; many: any }) => ({
+    // Many classes belong to one school
+    school: one(school, {
+      fields: [classes.schoolId],
+      references: [school.id],
+    }),
+
+    // One class has many students
+    students: many(student),
+
+    // One class has many sections
+    sections: many(section),
+
+    // One class has many subjects
+    subjects: many(subject),
+
+    // One class has a fee structure
+    fees: many(fees),
+
+    // One class has many due fee records
+    dueFees: many(dues),
+
+    // One class has many fee payment records
+    feePayments: many(payment),
   }),
-
-  // One class has many students
-  students: many(student),
-
-  // One class has many sections
-  sections: many(section),
-
-  // One class has many subjects
-  subjects: many(subject),
-
-  // One class has a fee structure
-  fees: many(fees),
-
-  // One class has many due fee records
-  dueFees: many(dues),
-
-  // One class has many fee payment records
-  feePayments: many(payment),
-}));
+);
 
 // Student Relations
-export const studentRelations = relations(student, ({ one, many }: { one: any; many: any }) => ({
-  // Many students belong to one school
-  school: one(school, {
-    fields: [student.schoolId],
-    references: [school.id],
+export const studentRelations = relations(
+  student,
+  ({ one, many }: { one: any; many: any }) => ({
+    // Many students belong to one school
+    school: one(school, {
+      fields: [student.schoolId],
+      references: [school.id],
+    }),
+
+    // Many students are assigned to one class
+    class: one(classes, {
+      fields: [student.classId],
+      references: [classes.id],
+    }),
+
+    // One student can be a class monitor for multiple sections
+    monitoringSections: many(section, { relationName: 'classMonitor' }),
+
+    // One student has many attendance records
+    attendanceRecords: many(studentAttendence),
+
+    // One student has many due fee records
+    dueFees: many(dues),
+
+    // One student has many fee payment records
+    feePayments: many(payment),
   }),
-
-  // Many students are assigned to one class
-  class: one(classes, {
-    fields: [student.classId],
-    references: [classes.id],
-  }),
-
-  // One student can be a class monitor for multiple sections
-  monitoringSections: many(section, { relationName: "classMonitor" }),
-
-  // One student has many attendance records
-  attendanceRecords: many(studentAttendence),
-
-  // One student has many due fee records
-  dueFees: many(dues),
-
-  // One student has many fee payment records
-  feePayments: many(payment),
-}));
+);
 
 // School Staff Relations
-export const schoolStaffRelations = relations(staff, ({ one, many }: { one: any; many: any }) => ({
-  // Many staff members belong to one school
-  school: one(school, {
-    fields: [staff.schoolId],
-    references: [school.id],
+export const schoolStaffRelations = relations(
+  staff,
+  ({ one, many }: { one: any; many: any }) => ({
+    // Many staff members belong to one school
+    school: one(school, {
+      fields: [staff.schoolId],
+      references: [school.id],
+    }),
+
+    // One staff member can be a class teacher for multiple sections
+    teachingSections: many(section, { relationName: 'classTeacher' }),
+
+    staffAttendenceRecord: many(staffAttendence),
+
+    // One staff member can teach multiple subjects
+    teachingSubjects: many(subject, { relationName: 'subjectTeacher' }),
+
+    // One staff member can have multiple subject assignments
+    subjectTeacherAssignments: many(subjectTeacher),
   }),
-
-  // One staff member can be a class teacher for multiple sections
-  teachingSections: many(section, { relationName: "classTeacher" }),
-
-  staffAttendenceRecord : many(staffAttendence),
-
-  // One staff member can teach multiple subjects
-  teachingSubjects: many(subject, { relationName: "subjectTeacher" }),
-
-  // One staff member can have multiple subject assignments
-  subjectTeacherAssignments: many(subjectTeacher),
-}));
+);
 
 // Class Section Relations
-export const classSectionRelations = relations(section, ({ one, many }: { one: any; many: any }) => ({
-  // Many sections belong to one school
-  school: one(school, {
-    fields: [section.schoolId],
-    references: [school.id],
+export const classSectionRelations = relations(
+  section,
+  ({ one, many }: { one: any; many: any }) => ({
+    // Many sections belong to one school
+    school: one(school, {
+      fields: [section.schoolId],
+      references: [school.id],
+    }),
+
+    // Many sections belong to one class
+    class: one(classes, {
+      fields: [section.classId],
+      references: [classes.id],
+    }),
+
+    // Many sections have one class monitor (student)
+    classMonitor: one(student, {
+      fields: [section.classMonitorId],
+      references: [student.id],
+      relationName: 'classMonitor',
+    }),
+
+    // Many sections have one class teacher (staff)
+    classTeacher: one(staff, {
+      fields: [section.classTeacherId],
+      references: [staff.id],
+      relationName: 'classTeacher',
+    }),
+
+    // One section can have many section-specific subjects
+    subjects: many(subject),
+
+    // One section has many due fee records
+    dueFees: many(dues),
+
+    // One section has many fee payment records
+    feePayments: many(payment),
   }),
-
-  // Many sections belong to one class
-  class: one(classes, {
-    fields: [section.classId],
-    references: [classes.id],
-  }),
-
-  // Many sections have one class monitor (student)
-  classMonitor: one(student, {
-    fields: [section.classMonitorId],
-    references: [student.id],
-    relationName: "classMonitor",
-  }),
-
-  // Many sections have one class teacher (staff)
-  classTeacher: one(staff, {
-    fields: [section.classTeacherId],
-    references: [staff.id],
-    relationName: "classTeacher",
-  }),
-
-  // One section can have many section-specific subjects
-  subjects: many(subject),
-
-  // One section has many due fee records
-  dueFees: many(dues),
-
-  // One section has many fee payment records
-  feePayments: many(payment),
-}));
+);
 
 // Attendance Relations
-export const studentAttendanceRelations = relations(studentAttendence, ({ one }: { one: any }) => ({
-  // Many attendance records belong to one school
-  school: one(school, {
-    fields: [studentAttendence.schoolId],
-    references: [school.id],
-  }),
+export const studentAttendanceRelations = relations(
+  studentAttendence,
+  ({ one }: { one: any }) => ({
+    // Many attendance records belong to one school
+    school: one(school, {
+      fields: [studentAttendence.schoolId],
+      references: [school.id],
+    }),
 
-  // Many attendance records belong to one student
-  student: one(student, {
-    fields: [studentAttendence.studentId],
-    references: [student.id],
+    // Many attendance records belong to one student
+    student: one(student, {
+      fields: [studentAttendence.studentId],
+      references: [student.id],
+    }),
   }),
-}));
+);
 
-export const staffAttendanceRelations = relations(staffAttendence, ({ one }: { one: any }) => ({
-  // Many attendance records belong to one school
-  school: one(school, {
-    fields: [staffAttendence.schoolId],
-    references: [school.id],
-  }),
+export const staffAttendanceRelations = relations(
+  staffAttendence,
+  ({ one }: { one: any }) => ({
+    // Many attendance records belong to one school
+    school: one(school, {
+      fields: [staffAttendence.schoolId],
+      references: [school.id],
+    }),
 
-  // Many attendance records belong to one student
-  student: one(staff, {
-    fields: [staffAttendence.staffId],
-    references: [student.id],
+    // Many attendance records belong to one student
+    student: one(staff, {
+      fields: [staffAttendence.staffId],
+      references: [student.id],
+    }),
   }),
-}));
+);
 
 // Class Subject Relations
-export const classSubjectRelations = relations(subject, ({ one, many }: { one: any; many: any }) => ({
-  // Many subjects belong to one school
-  school: one(school, {
-    fields: [subject.schoolId],
-    references: [school.id],
-  }),
+export const classSubjectRelations = relations(
+  subject,
+  ({ one, many }: { one: any; many: any }) => ({
+    // Many subjects belong to one school
+    school: one(school, {
+      fields: [subject.schoolId],
+      references: [school.id],
+    }),
 
-  // Many subjects belong to one class
-  class: one(classes, {
-    fields: [subject.classId],
-    references: [classes.id],
-  }),
+    // Many subjects belong to one class
+    class: one(classes, {
+      fields: [subject.classId],
+      references: [classes.id],
+    }),
 
-  // Many subjects may be specific to one section (optional)
-  section: one(section, {
-    fields: [subject.sectionId],
-    references: [section.id],
-  }),
+    // Many subjects may be specific to one section (optional)
+    section: one(section, {
+      fields: [subject.sectionId],
+      references: [section.id],
+    }),
 
-  // Many subjects are taught by one teacher
-  teacher: one(staff, {
-    fields: [subject.teacherId],
-    references: [staff.id],
-    relationName: "subjectTeacher",
-  }),
+    // Many subjects are taught by one teacher
+    teacher: one(staff, {
+      fields: [subject.teacherId],
+      references: [staff.id],
+      relationName: 'subjectTeacher',
+    }),
 
-  // One subject can have multiple teacher assignments
-  teacherAssignments: many(subjectTeacher),
-}));
+    // One subject can have multiple teacher assignments
+    teacherAssignments: many(subjectTeacher),
+  }),
+);
 
 // Class Subject Teacher Relations (Junction Table)
-export const classSubjectTeacherRelations = relations(subjectTeacher, ({ one }: { one: any }) => ({
-  // Many assignments belong to one school
-  school: one(school, {
-    fields: [subjectTeacher.schoolId],
-    references: [school.id],
-  }),
+export const classSubjectTeacherRelations = relations(
+  subjectTeacher,
+  ({ one }: { one: any }) => ({
+    // Many assignments belong to one school
+    school: one(school, {
+      fields: [subjectTeacher.schoolId],
+      references: [school.id],
+    }),
 
-  // Many assignments belong to one class
-  class: one(classes, {
-    fields: [subjectTeacher.classId],
-    references: [classes.id],
-  }),
+    // Many assignments belong to one class
+    class: one(classes, {
+      fields: [subjectTeacher.classId],
+      references: [classes.id],
+    }),
 
-  // Many assignments may be specific to one section (optional)
-  section: one(section, {
-    fields: [subjectTeacher.sectionId],
-    references: [section.id],
-  }),
+    // Many assignments may be specific to one section (optional)
+    section: one(section, {
+      fields: [subjectTeacher.sectionId],
+      references: [section.id],
+    }),
 
-  // Many assignments are for one subject
-  subject: one(subject, {
-    fields: [subjectTeacher.subjectId],
-    references: [subject.id],
-  }),
+    // Many assignments are for one subject
+    subject: one(subject, {
+      fields: [subjectTeacher.subjectId],
+      references: [subject.id],
+    }),
 
-  // Many assignments are for one teacher
-  teacher: one(staff, {
-    fields: [subjectTeacher.teacherId],
-    references: [staff.id],
+    // Many assignments are for one teacher
+    teacher: one(staff, {
+      fields: [subjectTeacher.teacherId],
+      references: [staff.id],
+    }),
   }),
-}));
+);
 
 // Class Fees Relations
-export const classFeesRelations = relations(fees, ({ one, many }: { one: any; many: any }) => ({
-  // Many fee structures belong to one school
-  school: one(school, {
-    fields: [fees.schoolId],
-    references: [school.id],
+export const classFeesRelations = relations(
+  fees,
+  ({ one, many }: { one: any; many: any }) => ({
+    // Many fee structures belong to one school
+    school: one(school, {
+      fields: [fees.schoolId],
+      references: [school.id],
+    }),
+
+    // Many fee structures belong to one class
+    class: one(classes, {
+      fields: [fees.classId],
+      references: [classes.id],
+    }),
+
+    // One fee structure has many due fee records
+    dueFees: many(dues),
+
+    // One fee structure has many fee payment records
+    feePayments: many(payment),
   }),
-
-  // Many fee structures belong to one class
-  class: one(classes, {
-    fields: [fees.classId],
-    references: [classes.id],
-  }),
-
-  // One fee structure has many due fee records
-  dueFees: many(dues),
-
-  // One fee structure has many fee payment records
-  feePayments: many(payment),
-}));
+);
 
 // Due Fees Relations
 export const dueFeesRelations = relations(dues, ({ one }: { one: any }) => ({
@@ -694,34 +733,39 @@ export const dueFeesRelations = relations(dues, ({ one }: { one: any }) => ({
 }));
 
 // Fees Payment Relations
-export const feesPaymentRelations = relations(payment, ({ one }: { one: any }) => ({
-  // Many payment records belong to one student
-  student: one(student, {
-    fields: [payment.studentId],
-    references: [student.id],
-  }),
+export const feesPaymentRelations = relations(
+  payment,
+  ({ one }: { one: any }) => ({
+    // Many payment records belong to one student
+    student: one(student, {
+      fields: [payment.studentId],
+      references: [student.id],
+    }),
 
-  // Many payment records belong to one school
-  school: one(school, {
-    fields: [payment.schoolId],
-    references: [school.id],
-  }),
+    // Many payment records belong to one school
+    school: one(school, {
+      fields: [payment.schoolId],
+      references: [school.id],
+    }),
 
-  // Many payment records belong to one class
-  class: one(classes, {
-    fields: [payment.classId],
-    references: [classes.id],
-  }),
+    // Many payment records belong to one class
+    class: one(classes, {
+      fields: [payment.classId],
+      references: [classes.id],
+    }),
 
-  // Many payment records belong to one section
-  section: one(section, {
-    fields: [payment.sectionId],
-    references: [section.id],
-  }),
+    // Many payment records belong to one section
+    section: one(section, {
+      fields: [payment.sectionId],
+      references: [section.id],
+    }),
 
-  // Many payment records are against one fee structure
-  fees: one(fees, {
-    fields: [payment.feesId],
-    references: [fees.id],
+    // Many payment records are against one fee structure
+    fees: one(fees, {
+      fields: [payment.feesId],
+      references: [fees.id],
+    }),
   }),
-}));
+);
+
+export type School = typeof school.$inferInsert;

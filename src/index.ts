@@ -3,6 +3,7 @@ import { envConfigs } from './config/envConfig';
 import swaggerUi from 'swagger-ui-express';
 import * as swaggerFile from './swagger-output.json';
 import mainRouter from './router';
+import { connectToDatabase } from './database/db';
 
 const app = express();
 app.use(express.json());
@@ -14,8 +15,13 @@ app.get('/', (req, res) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use('/api/v1', mainRouter);
 
+
+
 const port = envConfigs.port;
 app.listen(port, async () => {
+ 
+  // connectToDatabase();
+
   console.log(`Server is running on http://localhost:${port}`);
   console.log(
     `API Documentation available at http://localhost:${port}/api-docs`,

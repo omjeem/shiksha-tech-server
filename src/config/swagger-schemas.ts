@@ -1,13 +1,9 @@
-import { UserValidator } from '../validator/userValidator';
-import { SchoolValidator } from '../validator/schoolValidator';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import Validators from '../validator';
 
 // Define schemas based on Zod validators
 export const swaggerSchemas = {
-  RegisterUserRequest: zodToJsonSchema(UserValidator.registerUserValidator),
-  LoginUserRequest: zodToJsonSchema(UserValidator.loginUserValidator),
-  CreateSchoolRequest: zodToJsonSchema(SchoolValidator.createSchoolValidator),
-  UpdateSchoolRequest: zodToJsonSchema(SchoolValidator.updateSchoolValidator),
+  RegisterSchool: zodToJsonSchema(Validators.School.Create()),
 };
 
 // Generate Swagger schema definitions

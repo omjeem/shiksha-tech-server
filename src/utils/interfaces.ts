@@ -1,4 +1,3 @@
-
 export enum SchoolBoard_Interface {
     CBSE = 'CBSE',
     ICSE = 'ICSE',
@@ -10,9 +9,11 @@ export enum Attendence_Interface {
     PRESENT = 'PRESENT',
     ABSENT = 'ABSENT',
     LEAVE = 'LEAVE',
+    MEDICAL = "MEDICAL"
 }
 
 export enum SchoolStaffRole_Interface {
+    SUPER_ADMIN = "SUPER_ADMIN",
     TEACHER = 'TEACHER',
     ADMIN = 'ADMIN',
     ACCOUNTANT = 'ACCOUNTANT',

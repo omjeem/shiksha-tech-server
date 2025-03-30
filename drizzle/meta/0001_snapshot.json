@@ -1,6 +1,6 @@
 {
-  "id": "f2408986-969f-4940-ab25-3c826186fce5",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "8aa5532f-5860-46d4-921b-c9e837355454",
+  "prevId": "f2408986-969f-4940-ab25-3c826186fce5",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1566,7 +1566,8 @@
       "values": [
         "PRESENT",
         "ABSENT",
-        "LEAVE"
+        "LEAVE",
+        "MEDICAL"
       ]
     },
     "public.classNameEnum": {

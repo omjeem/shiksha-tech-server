@@ -36,11 +36,6 @@
           "School"
         ],
         "description": "Endpoint to create a school",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {

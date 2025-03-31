@@ -8,7 +8,6 @@ const schoolRouter = Express.Router();
 
 schoolRouter.post(
   '/',
-  authMiddleware,
   validateRequest(Validators.School.Create()),
   Controllers.School.CreateSchool,
 );

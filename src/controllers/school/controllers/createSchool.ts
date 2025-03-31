@@ -21,11 +21,6 @@ export function createSchoolResponse() {
     method: 'post',
     tags: ['School'],
     description: 'Endpoint to create a school',
-    security: [
-      {
-        "bearerAuth": []
-      }
-    ],
     // parameters: [
     //   {
     //     name: 'schoolId',

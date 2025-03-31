@@ -4,7 +4,7 @@ import { school } from '../../../database/schema';
 
 async function createSchool(schoolData: any) {
   try {
-    const { schoolName, address, websiteLink, contactNumber, contactEmail, superAdminName, superAdminPassword, superAdminEmail, superAdminContact, board } = schoolData;
+    const { schoolName, address, websiteLink, contactNumber, contactEmail, superAdminName, superAdminPassword, superAdminEmail, superAdminContact, board, totalClasses, totalStudents, totalTeachers, otherBoard } = schoolData;
     const response = await db.insert(school).values({
       schoolName,
       address,
@@ -16,6 +16,10 @@ async function createSchool(schoolData: any) {
       superAdminEmail,
       superAdminContact,
       board,
+      totalClasses,
+      totalStudents,
+      totalTeachers,
+      otherBoard
     }).execute();
     return response;
   } catch (err : any) {

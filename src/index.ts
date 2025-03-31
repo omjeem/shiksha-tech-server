@@ -4,9 +4,11 @@ import swaggerUi from 'swagger-ui-express';
 import * as swaggerFile from './swagger-output.json';
 import mainRouter from './router';
 import { connectToDatabase } from './database/db';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Welcome to our School Management Api');

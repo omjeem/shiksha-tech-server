@@ -52,6 +52,10 @@ const swaggerDocument = {
     {
       name: "School",
       description: "School management endpoints"
+    },
+    {
+      name: "Super-Admin",
+      description: "Super Admin endpoints"
     }
   ],
   paths: {},
@@ -69,28 +73,27 @@ const swaggerDocument = {
 
 // Add all endpoint documentation from the endpointDocs
 if (endpointDocs && Object.keys(endpointDocs).length > 0) {
-  console.log(`Processing ${Object.keys(endpointDocs).length} endpoints`);
-  
+
   Object.entries(endpointDocs).forEach(([key, endpoint]) => {
-    
+
+    console.log(`Processing endpoint ${key} ${endpoint}`);
     if (!endpoint || typeof endpoint !== 'object') {
       console.error(`Invalid endpoint definition for ${key}:`, endpoint);
       return;
     }
-    
+
     const { path, method, ...rest } = endpoint;
-    
+
     if (!path || !method) {
       console.error(`Missing path or method for endpoint ${key}:`, endpoint);
       return;
     }
-    
-    console.log(`Adding documentation for ${method.toUpperCase()} ${path}`);
-    
+
+    // console.log(`Adding documentation for ${method.toUpperCase()} ${path}`);
+
     if (!swaggerDocument.paths[path]) {
       swaggerDocument.paths[path] = {};
     }
-    
     swaggerDocument.paths[path][method] = rest;
   });
 } else {

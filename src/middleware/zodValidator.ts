@@ -12,7 +12,7 @@ export const validateRequest =
         params: req.params,
         query: req.query,
       });
-
+      
       req.body = sanitizedValues.body;
       req.params = sanitizedValues.params;
       req.query = sanitizedValues.query;

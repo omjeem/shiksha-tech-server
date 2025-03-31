@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export enum SchoolBoard_Enum {
   CBSE = 'CBSE',
   ICSE = 'ICSE',
@@ -47,3 +49,16 @@ export enum ClassName_Enum {
   ELEVEN = 'ELEVEN',
   TWELVE = 'TWELVE',
 }
+
+export interface Request_Interface {
+  user: {
+    schoolId?: string;
+    studentId?: string;
+    staffId?: string;
+    role?: SchoolStaffRole_Enum;
+    iat?: number;
+    exp?: number
+  }
+}
+
+export interface CustomRequest extends Request_Interface, Request { }

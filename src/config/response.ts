@@ -2,9 +2,9 @@ import type { Response } from 'express';
 
 export function successResponse(
   res: Response,
-  data: any,
   status: number,
   message?: string,
+  data?: any,
 ) {
   return res.status(status).json({ success: true, message, data });
 }

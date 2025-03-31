@@ -56,20 +56,16 @@ const timeStamps = {
  * (students, staff, classes, etc.) belong to a school.
  */
 export const school = pgTable('school', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   schoolName: varchar({ length: 255 }).notNull(),
   address: varchar({ length: 255 }).notNull(),
   websiteLink: varchar({ length: 255 }).unique().notNull(),
   contactNumber: varchar({ length: 15 }).unique().notNull(),
-  contactEmail: varchar({ length: 255 }).notNull().unique().unique().notNull(),
+  contactEmail: varchar({ length: 255 }).notNull().unique(),
   superAdminName: varchar({ length: 255 }).notNull(),
   superAdminPassword: varchar({ length: 255 }).notNull(),
-  superAdminEmail: varchar({ length: 255 })
-    .unique()
-    .notNull()
-    .unique()
-    .notNull(),
+  superAdminEmail: varchar({ length: 255 }).notNull().unique(),
   superAdminContact: varchar({ length: 15 }).unique().notNull(),
   totalStudents: integer().default(0),
   totalTeachers: integer().default(0),
@@ -93,7 +89,7 @@ export const school = pgTable('school', {
  * - One-to-Many with Student: A class can have multiple students
  */
 export const classes = pgTable('classes', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
@@ -117,7 +113,7 @@ export const classes = pgTable('classes', {
  * - One-to-Many with FeesPayment: A student can make multiple fee payments
  */
 export const student = pgTable('student', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
@@ -144,7 +140,7 @@ export const student = pgTable('student', {
  * - One-to-Many with ClassSubjectTeacher: Tracks specific teacher assignments to subjects
  */
 export const staff = pgTable('staff', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
@@ -176,7 +172,7 @@ export const staff = pgTable('staff', {
  * - One-to-Many with FeesPayment: Section-specific payment records
  */
 export const section = pgTable('section', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
@@ -205,7 +201,7 @@ export const section = pgTable('section', {
  *   (schoolId references school.id with cascade delete)
  */
 export const studentAttendence = pgTable('studentAttendence', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   studentId: uuid()
     .references(() => student.id)
@@ -221,7 +217,7 @@ export const studentAttendence = pgTable('studentAttendence', {
 });
 
 export const staffAttendence = pgTable('staffAttendence', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   staffId: uuid().references(() => staff.id),
   schoolId: uuid().references(() => school.id, { onDelete: 'cascade' }),
@@ -245,7 +241,7 @@ export const staffAttendence = pgTable('staffAttendence', {
  * - One-to-Many with ClassSubjectTeacher: Tracks teacher assignments for this subject
  */
 export const subject = pgTable('subject', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
@@ -279,7 +275,7 @@ export const subject = pgTable('subject', {
  *   (teacherId references staff.id with cascade delete)
  */
 export const subjectTeacher = pgTable('subjectTeacher', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
@@ -309,7 +305,7 @@ export const subjectTeacher = pgTable('subjectTeacher', {
  * - One-to-Many with FeesPayment: Payment records against this fee structure
  */
 export const fees = pgTable('fees', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
@@ -343,7 +339,7 @@ export const fees = pgTable('fees', {
  *   (feesId references fees.id with cascade delete)
  */
 export const dues = pgTable('dues', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   studentId: uuid()
     .references(() => student.id, { onDelete: 'cascade' })
@@ -380,7 +376,7 @@ export const dues = pgTable('dues', {
  *   (feesId references fees.id with cascade delete)
  */
 export const payment = pgTable('payment', {
-  id: uuid().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   studentId: uuid()
     .references(() => student.id, { onDelete: 'cascade' })

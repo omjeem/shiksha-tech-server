@@ -4,7 +4,11 @@
  */
 
 const { createSchoolResponse } = require('../controllers/school/controllers/createSchool');
+const { superAdminLoginResponse } = require('../controllers/superAdmin/controllers/login');
+const { getSchoolDetailsResponse } = require('../controllers/school/controllers/getDetails');
 
 module.exports = {
   createSchool: createSchoolResponse(),
+  superAdminLogin: superAdminLoginResponse(),
+  schoolDetail: getSchoolDetailsResponse()
 }; 

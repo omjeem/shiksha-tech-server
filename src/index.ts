@@ -19,9 +19,7 @@ app.use('/api/v1', mainRouter);
 
 const port = envConfigs.port;
 app.listen(port, async () => {
- 
-  // connectToDatabase();
-
+  connectToDatabase()
   console.log(`Server is running on http://localhost:${port}`);
   console.log(
     `API Documentation available at http://localhost:${port}/api-docs`,

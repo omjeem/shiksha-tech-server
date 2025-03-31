@@ -6,14 +6,16 @@ import { Client } from 'pg';
 const DATABASE_URL = envConfigs.database_url;
 
 const client = new Client(DATABASE_URL);
+
 export const db = drizzle(client, { schema: { ...schema } });
-export function connectToDatabase() {
+
+export const connectToDatabase = () => {
     client
-        .connect()
-        .then(() => {
-            console.log('Postgress Client Connected Successfully');
-        })
-        .catch((error: any) => {
-            console.log('Error While connecting with postgress Client', error);
-        });
+    .connect()
+    .then(() => {
+        console.log('Postgress Client Connected Successfully');
+    })
+    .catch((error: any) => {
+        console.log('Error While connecting with postgress Client', error);
+    });
 }

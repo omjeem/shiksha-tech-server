@@ -1,10 +1,18 @@
 import { Request, Response } from 'express';
-import { successResponse } from '../../../config/response';
+import { errorResponse, successResponse } from '../../../config/response';
+import { DBServices } from '../../../dbServices';
 
-
-export const createSchoolController = (req: Request, res: Response): any => {
+export const createSchoolController = async (
+  req: Request,
+  res: Response,
+): Promise<any> => {
   const body = req.body;
-  return successResponse(res, body, 200, 'School created successfully');
+  try {
+    const data = await DBServices.School.CreateSchool(body);
+    return successResponse(res, 200, 'School created successfully we will get back to you soon once your school is verified');
+  } catch (Err) {
+    return errorResponse(res, 500, Err);
+  }
 };
 
 export function createSchoolResponse() {
@@ -13,6 +21,11 @@ export function createSchoolResponse() {
     method: 'post',
     tags: ['School'],
     description: 'Endpoint to create a school',
+    security: [
+      {
+        "bearerAuth": []
+      }
+    ],
     // parameters: [
     //   {
     //     name: 'schoolId',
@@ -41,19 +54,19 @@ export function createSchoolResponse() {
         'application/json': {
           schema: { $ref: '#/components/schemas/RegisterSchool' },
           example: {
-            schoolName: "ABC School",
-            address: "123 Education Street",
-            websiteLink: "https://abcschool.com",
-            contactNumber: "1234567890",
-            contactEmail: "contact@abcschool.com",
-            superAdminName: "John Doe",
-            superAdminPassword: "securepass123",
-            superAdminEmail: "admin@abcschool.com",
-            superAdminContact: "9876543210",
-            board: "CBSE"
-          }
-        }
-      }
+            schoolName: 'ABC School',
+            address: '123 Education Street',
+            websiteLink: 'https://abcschool.com',
+            contactNumber: '1234567890',
+            contactEmail: 'contact@abcschool.com',
+            superAdminName: 'John Doe',
+            superAdminPassword: 'securepass123',
+            superAdminEmail: 'admin@abcschool.com',
+            superAdminContact: '9876543210',
+            board: 'CBSE',
+          },
+        },
+      },
     },
     responses: {
       200: {
@@ -64,35 +77,62 @@ export function createSchoolResponse() {
               type: 'object',
               properties: {
                 success: { type: 'boolean', example: true },
-                message: { type: 'string', example: 'School created successfully' },
-                data: { $ref: '#/components/schemas/RegisterSchool' }
-              }
+                message: {
+                  type: 'string',
+                  example: 'School created successfully',
+                },
+                data: { $ref: '#/components/schemas/RegisterSchool' },
+              },
             },
             examples: {
-              "Standard User": {
+              'Standard User': {
                 value: {
-                  message: "User registered successfully",
+                  message: 'User registered successfully',
                   data: {
                     id: 1,
-                    name: "John Doe",
-                    email: "john@example.com"
-                  }
-                }
+                    name: 'John Doe',
+                    email: 'john@example.com',
+                  },
+                },
               },
-              "New User": {
+              'New User': {
                 value: {
-                  message: "New User registered successfully",
+                  message: 'New User registered successfully',
                   data: {
                     id: 2,
-                    name: "Jane Doe",
-                    email: "jane@example.com"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                    name: 'Jane Doe',
+                    email: 'jane@example.com',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        description: 'Internal Server Error',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean', example: false },
+                error: { type: 'string', example: 'Error Occured' },
+              },
+            },
+            examples: {
+              'Server Error': {
+                value: {
+                  message: 'Internal Server Error',
+                  error: {
+                    message: 'Error Occured',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
 }

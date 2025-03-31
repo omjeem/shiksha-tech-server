@@ -23,6 +23,10 @@
     {
       "name": "School",
       "description": "School management endpoints"
+    },
+    {
+      "name": "Super-Admin",
+      "description": "Super Admin endpoints"
     }
   ],
   "paths": {
@@ -32,6 +36,11 @@
           "School"
         ],
         "description": "Endpoint to create a school",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -94,6 +103,239 @@
                         "name": "Jane Doe",
                         "email": "jane@example.com"
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Error Occured"
+                    }
+                  }
+                },
+                "examples": {
+                  "Server Error": {
+                    "value": {
+                      "message": "Internal Server Error",
+                      "error": {
+                        "message": "Error Occured"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "School"
+        ],
+        "description": "Endpoint to get School Details",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "schoolName": "ABC School",
+                "address": "123 Education Street",
+                "websiteLink": "https://abcschool.com",
+                "contactNumber": "1234567890",
+                "contactEmail": "contact@abcschool.com",
+                "superAdminName": "John Doe",
+                "superAdminPassword": "securepass123",
+                "superAdminEmail": "admin@abcschool.com",
+                "superAdminContact": "9876543210",
+                "board": "CBSE"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "School created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "School created successfully"
+                    },
+                    "data": {
+                      "schoolName": "ABC School",
+                      "address": "123 Education Street",
+                      "websiteLink": "https://abcschool.com",
+                      "contactNumber": "1234567890",
+                      "contactEmail": "contact@abcschool.com",
+                      "superAdminName": "John Doe",
+                      "superAdminPassword": "securepass123",
+                      "superAdminEmail": "admin@abcschool.com",
+                      "superAdminContact": "9876543210",
+                      "board": "CBSE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Error Occured"
+                    }
+                  }
+                },
+                "examples": {
+                  "Server Error": {
+                    "value": {
+                      "message": "Internal Server Error",
+                      "error": {
+                        "message": "Error Occured"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/super-admin/": {
+      "post": {
+        "tags": [
+          "Super-Admin"
+        ],
+        "description": "Endpoint for Super Admin Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "email": "contact@abcschool.com",
+                  "password": "securepass123"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin Logged In Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Admin logged in successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU1VQRVJfQURNSU4iLCJpYXQiOjE3NDM0NDkxMDgsImV4cCI6MTc0MzQ1MjcwOH0.Hcz9EccThmjuMgmkNPYI2XdsCykBCcm-VVzM1meC-Mw"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid Email or password"
+                    }
+                  }
+                },
+                "examples": {
+                  "Invalid Email": {
+                    "value": {
+                      "success": false,
+                      "error": {
+                        "body.email": "Invalid Email"
+                      }
+                    }
+                  },
+                  "Email And Password Required": {
+                    "value": {
+                      "success": false,
+                      "error": {
+                        "body.email": "Required",
+                        "body.password": "Required"
+                      }
+                    }
+                  },
+                  "Invalid Email or Password": {
+                    "value": {
+                      "success": false,
+                      "error": "User not found"
+                    }
+                  },
+                  "Verification Pending": {
+                    "value": {
+                      "success": false,
+                      "error": "School is under verification process! Please wait for the confirmation"
                     }
                   }
                 }
@@ -175,6 +417,34 @@
               "superAdminPassword",
               "superAdminEmail",
               "superAdminContact"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "body"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "SuperAdminLogin": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "password": {
+                "type": "string",
+                "minLength": 6
+              }
+            },
+            "required": [
+              "email",
+              "password"
             ],
             "additionalProperties": false
           }

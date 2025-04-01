@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx tsc -b &&  node build/index.js",
+    "start": "npm run swagger && npx tsc -b &&  node build/index.js",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "build": "npm run lint && npm run format && npm run swagger && npx tsc -b && node build/index.js",
     "dev": "npm run swagger && nodemon src/index.ts",

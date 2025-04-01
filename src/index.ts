@@ -20,7 +20,7 @@ app.use('/api/v1', mainRouter);
 
 
 const port = envConfigs.port || 3000;
-app.listen(port, async () => {
+app.listen(port,'0.0.0.0', async () => {
   connectToDatabase()
   console.log(`Server is running on http://localhost:${port}`);
   console.log(

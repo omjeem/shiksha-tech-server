@@ -4,15 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run swagger && npx tsc -b &&  node build/index.js",
+    "start": "npx tsc -b &&  node build/index.js",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "build": "npm run lint && npm run format && npm run swagger && npx tsc -b && node build/index.js",
-    "dev": "npm run swagger && nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "swagger": "node src/swagger.js",
-    "swagger-dev": "nodemon --exec \"npm run swagger\" --watch src/ --ext ts",
-    "swagger-test": "node test-swagger.js"
+    "build": "npx tsc -b && node build/index.js",
+    "dev": "nodemon src/index.ts",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "keywords": [],
   "author": "",
@@ -47,7 +43,6 @@
     "eslint-plugin-prettier": "^5.2.3",
     "globals": "^16.0.0",
     "prettier": "^3.5.3",
-    "swagger-autogen": "^2.23.7",
     "typescript-eslint": "^8.26.0"
   }
 }

@@ -10,12 +10,12 @@ const client = new Client(DATABASE_URL);
 export const db = drizzle(client, { schema: { ...schema } });
 
 export const connectToDatabase = () => {
-    client
+  client
     .connect()
     .then(() => {
-        console.log('Postgress Client Connected Successfully');
+      console.log('Postgress Client Connected Successfully');
     })
     .catch((error: any) => {
-        console.log('Error While connecting with postgress Client', error);
+      console.log('Error While connecting with postgress Client', error);
     });
-}
+};

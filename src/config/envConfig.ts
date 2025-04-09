@@ -10,7 +10,10 @@ const envVarsSchema = z.object({
   DATABASE_URL: z.string(),
   JWT_SECRET: z.string().nonempty(),
   BACKEND_URL: z.string().nonempty(),
-  JWT_EXPIRES_IN : z.string().nonempty().transform((str) => parseInt(str, 10)),
+  JWT_EXPIRES_IN: z
+    .string()
+    .nonempty()
+    .transform((str) => parseInt(str, 10)),
 });
 
 const envVars = envVarsSchema.parse(process.env);
@@ -20,5 +23,5 @@ export const envConfigs = {
   jwt_secret: envVars.JWT_SECRET,
   database_url: envVars.DATABASE_URL,
   backend_url: envVars.BACKEND_URL,
-  jwt_expires_in: envVars.JWT_EXPIRES_IN
+  jwt_expires_in: envVars.JWT_EXPIRES_IN,
 };

@@ -1,15 +1,14 @@
 import Express from 'express';
 import { validateRequest } from '../../middleware/zodValidator';
-import Validators from '../../validator';
-import Controllers from '../../controllers';
+import { SuperAdminController } from '../../controllers/superAdmin/SuperAdminController';
+import SuperAdminValidator from '../../validator/superAdmin/SuperAdminValidator';
 
 const superAdminRouter = Express.Router();
 
 superAdminRouter.post(
-    '/',
-    validateRequest(Validators.SuperAdmin.login()),
-    Controllers.SuperAdmin.login,
+  '/',
+  validateRequest(SuperAdminValidator.login()),
+  SuperAdminController.superAdminLogin,
 );
-
 
 export default superAdminRouter;

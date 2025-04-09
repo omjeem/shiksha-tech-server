@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request } from 'express';
 
 export enum SchoolBoard_Enum {
   CBSE = 'CBSE',
@@ -57,8 +57,8 @@ export interface Request_Interface {
     staffId?: string;
     role?: SchoolStaffRole_Enum;
     iat?: number;
-    exp?: number
-  }
+    exp?: number;
+  };
 }
 
-export interface CustomRequest extends Request_Interface, Request { }
+export interface CustomRequest extends Request_Interface, Request {}

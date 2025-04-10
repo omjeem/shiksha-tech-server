@@ -21,6 +21,7 @@ export class SchoolDBServices {
         totalTeachers,
         otherBoard,
       } = schoolData;
+      
       const response = await db
         .insert(school)
         .values({

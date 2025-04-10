@@ -1,15 +1,18 @@
 import {
+  PgUUID,
   boolean,
+  check,
   date,
   integer,
   pgEnum,
   pgTable,
   serial,
   timestamp,
+  unique,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
   Attendence_Enum,
   ClassName_Enum,
@@ -94,11 +97,13 @@ export const classes = pgTable('classes', {
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
     .notNull(),
-  clasName: classNameEnum('clasName').notNull(),
+  className: classNameEnum('className').notNull(),
   totalSection: integer().notNull(),
   totalStudent: integer().notNull(),
   ...timeStamps,
-});
+}, (table) => [
+  unique("unique_class").on(table.className, table.schoolId),
+]);
 
 /**
  * Student Table: Represents students enrolled in a school
@@ -115,19 +120,24 @@ export const classes = pgTable('classes', {
 export const student = pgTable('student', {
   id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
-  name: varchar({ length: 255 }).notNull(),
+  srNo: integer().notNull(),
+  name: varchar({ length: 255 }),
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }).notNull(),
   schoolId: uuid()
     .references(() => school.id, { onDelete: 'cascade' })
     .notNull(),
   classId: uuid().references(() => classes.id),
+  sectionId: uuid().references(() => section.id),
   isDeleted: boolean().default(false),
   admissionClass: integer().notNull(),
   admissionSection: varchar({ length: 5 }).notNull(),
   admissionYear: integer().notNull(),
   ...timeStamps,
-});
+}, (table) => [
+  check("srNo_check", sql`${table.srNo} > 0`),
+  unique("srNo_unique").on(table.srNo, table.schoolId),
+]);
 
 /**
  * School Staff Table: Represents faculty and administrative staff
@@ -171,7 +181,7 @@ export const staff = pgTable('staff', {
  * - One-to-Many with DueFees: Section-specific fee records
  * - One-to-Many with FeesPayment: Section-specific payment records
  */
-export const section = pgTable('section', {
+export const section : any = pgTable('section', {
   id: uuid().primaryKey().defaultRandom(),
   serial: serial(),
   schoolId: uuid()
@@ -181,15 +191,15 @@ export const section = pgTable('section', {
     .references(() => classes.id, { onDelete: 'cascade' })
     .notNull(),
   sectionName: varchar({ length: 5 }).notNull(),
-  totalStudent: integer().notNull(),
+  totalStudent: integer().notNull().default(0),
   classMonitorId: uuid()
-    .references(() => student.id)
-    .notNull(),
+    .references(() => student.id),
   classTeacherId: uuid()
-    .references(() => staff.id)
-    .notNull(),
+    .references(() => staff.id),
   ...timeStamps,
-});
+}, (table) => [
+  unique("unique_section").on(table.sectionName, table.schoolId),
+]);
 
 /**
  * Attendance Table: Tracks daily student attendance
@@ -488,6 +498,11 @@ export const studentRelations = relations(
       references: [classes.id],
     }),
 
+    section: one(section, {
+      fields: [student.sectionId],
+      references: [section.id],
+    }),
+
     // One student can be a class monitor for multiple sections
     monitoringSections: many(section, { relationName: 'classMonitor' }),
 
@@ -764,4 +779,4 @@ export const feesPaymentRelations = relations(
   }),
 );
 
-export type School = typeof school.$inferInsert;
+// export type School = typeof school.$inferInsert;

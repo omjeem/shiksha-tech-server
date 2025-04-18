@@ -52,7 +52,7 @@ export enum ClassName_Enum {
 
 export interface Request_Interface {
   user: {
-    schoolId?: string;
+    schoolId: string;
     studentId?: string;
     staffId?: string;
     role?: SchoolStaffRole_Enum;

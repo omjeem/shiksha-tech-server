@@ -1,1 +1,0 @@
-ALTER TABLE "classes" ADD CONSTRAINT "unique_class" UNIQUE("className","schoolId");

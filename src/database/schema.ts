@@ -91,19 +91,21 @@ export const school = pgTable('school', {
  * - One-to-Many with ClassFees: Fee structure is defined per class
  * - One-to-Many with Student: A class can have multiple students
  */
-export const classes = pgTable('classes', {
-  id: uuid().primaryKey().defaultRandom(),
-  serial: serial(),
-  schoolId: uuid()
-    .references(() => school.id, { onDelete: 'cascade' })
-    .notNull(),
-  className: classNameEnum('className').notNull(),
-  totalSection: integer().notNull(),
-  totalStudent: integer().notNull(),
-  ...timeStamps,
-}, (table) => [
-  unique("unique_class").on(table.className, table.schoolId),
-]);
+export const classes = pgTable(
+  'classes',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    serial: serial(),
+    schoolId: uuid()
+      .references(() => school.id, { onDelete: 'cascade' })
+      .notNull(),
+    className: classNameEnum('className').notNull(),
+    totalSection: integer().notNull(),
+    totalStudent: integer().notNull(),
+    ...timeStamps,
+  },
+  (table) => [unique('unique_class').on(table.className, table.schoolId)],
+);
 
 /**
  * Student Table: Represents students enrolled in a school
@@ -117,27 +119,32 @@ export const classes = pgTable('classes', {
  * - One-to-Many with DueFees: A student can have multiple due fee records
  * - One-to-Many with FeesPayment: A student can make multiple fee payments
  */
-export const student = pgTable('student', {
-  id: uuid().primaryKey().defaultRandom(),
-  serial: serial(),
-  srNo: integer().notNull(),
-  name: varchar({ length: 255 }),
-  email: varchar({ length: 255 }).notNull().unique(),
-  password: varchar({ length: 255 }).notNull(),
-  schoolId: uuid()
-    .references(() => school.id, { onDelete: 'cascade' })
-    .notNull(),
-  classId: uuid().references(() => classes.id),
-  sectionId: uuid().references(() => section.id),
-  isDeleted: boolean().default(false),
-  admissionClass: integer().notNull(),
-  admissionSection: varchar({ length: 5 }).notNull(),
-  admissionYear: integer().notNull(),
-  ...timeStamps,
-}, (table) => [
-  check("srNo_check", sql`${table.srNo} > 0`),
-  unique("srNo_unique").on(table.srNo, table.schoolId),
-]);
+export const student = pgTable(
+  'student',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    serial: serial(),
+    srNo: integer().notNull(),
+    name: varchar({ length: 255 }),
+    rollNo: integer(),
+    email: varchar({ length: 255 }).notNull().unique(),
+    password: varchar({ length: 255 }).notNull(),
+    schoolId: uuid()
+      .references(() => school.id, { onDelete: 'cascade' })
+      .notNull(),
+    classId: uuid().references(() => classes.id),
+    sectionId: uuid().references(() => section.id),
+    isDeleted: boolean().default(false),
+    admissionClass: varchar({ length: 5 }),
+    admissionSection: varchar({ length: 5 }),
+    admissionDate: date(),
+    ...timeStamps,
+  },
+  (table) => [
+    check('srNo_check', sql`${table.srNo} > 0`),
+    unique('srNo_unique').on(table.srNo, table.schoolId),
+  ],
+);
 
 /**
  * School Staff Table: Represents faculty and administrative staff
@@ -181,25 +188,25 @@ export const staff = pgTable('staff', {
  * - One-to-Many with DueFees: Section-specific fee records
  * - One-to-Many with FeesPayment: Section-specific payment records
  */
-export const section : any = pgTable('section', {
-  id: uuid().primaryKey().defaultRandom(),
-  serial: serial(),
-  schoolId: uuid()
-    .references(() => school.id, { onDelete: 'cascade' })
-    .notNull(),
-  classId: uuid()
-    .references(() => classes.id, { onDelete: 'cascade' })
-    .notNull(),
-  sectionName: varchar({ length: 5 }).notNull(),
-  totalStudent: integer().notNull().default(0),
-  classMonitorId: uuid()
-    .references(() => student.id),
-  classTeacherId: uuid()
-    .references(() => staff.id),
-  ...timeStamps,
-}, (table) => [
-  unique("unique_section").on(table.sectionName, table.schoolId),
-]);
+export const section: any = pgTable(
+  'section',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    serial: serial(),
+    schoolId: uuid()
+      .references(() => school.id, { onDelete: 'cascade' })
+      .notNull(),
+    classId: uuid()
+      .references(() => classes.id, { onDelete: 'cascade' })
+      .notNull(),
+    sectionName: varchar({ length: 5 }).notNull(),
+    totalStudent: integer().notNull().default(0),
+    classMonitorId: uuid().references(() => student.id),
+    classTeacherId: uuid().references(() => staff.id),
+    ...timeStamps,
+  },
+  (table) => [unique('unique_section').on(table.sectionName, table.schoolId)],
+);
 
 /**
  * Attendance Table: Tracks daily student attendance

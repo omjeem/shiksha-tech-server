@@ -1,1 +1,0 @@
-ALTER TABLE "classes" RENAME COLUMN "clasName" TO "className";

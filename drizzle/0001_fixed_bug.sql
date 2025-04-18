@@ -1,1 +1,0 @@
-ALTER TYPE "public"."attendenceEnum" ADD VALUE 'MEDICAL';

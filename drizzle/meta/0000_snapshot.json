@@ -1,5 +1,5 @@
 {
-  "id": "f2408986-969f-4940-ab25-3c826186fce5",
+  "id": "11f6412d-64f2-441a-bdf3-d5003ffbaa61",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,7 +12,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -26,8 +27,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "clasName": {
-          "name": "clasName",
+        "className": {
+          "name": "className",
           "type": "classNameEnum",
           "typeSchema": "public",
           "primaryKey": false,
@@ -82,7 +83,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "unique_class": {
+          "name": "unique_class",
+          "nullsNotDistinct": false,
+          "columns": [
+            "className",
+            "schoolId"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -95,7 +105,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -241,7 +252,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -373,7 +385,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -519,7 +532,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -543,13 +557,13 @@
           "name": "websiteLink",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "contactNumber": {
           "name": "contactNumber",
           "type": "varchar(15)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "contactEmail": {
           "name": "contactEmail",
@@ -579,7 +593,7 @@
           "name": "superAdminContact",
           "type": "varchar(15)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "totalStudents": {
           "name": "totalStudents",
@@ -653,6 +667,20 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "school_websiteLink_unique": {
+          "name": "school_websiteLink_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "websiteLink"
+          ]
+        },
+        "school_contactNumber_unique": {
+          "name": "school_contactNumber_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "contactNumber"
+          ]
+        },
         "school_contactEmail_unique": {
           "name": "school_contactEmail_unique",
           "nullsNotDistinct": false,
@@ -665,6 +693,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "superAdminEmail"
+          ]
+        },
+        "school_superAdminContact_unique": {
+          "name": "school_superAdminContact_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "superAdminContact"
           ]
         }
       },
@@ -680,7 +715,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -710,19 +746,20 @@
           "name": "totalStudent",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": 0
         },
         "classMonitorId": {
           "name": "classMonitorId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "classTeacherId": {
           "name": "classTeacherId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -800,7 +837,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "unique_section": {
+          "name": "unique_section",
+          "nullsNotDistinct": false,
+          "columns": [
+            "sectionName",
+            "schoolId"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -813,7 +859,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -929,7 +976,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -1025,7 +1073,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -1033,11 +1082,23 @@
           "primaryKey": false,
           "notNull": true
         },
+        "srNo": {
+          "name": "srNo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "rollNo": {
+          "name": "rollNo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "email": {
           "name": "email",
@@ -1063,6 +1124,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "sectionId": {
+          "name": "sectionId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "isDeleted": {
           "name": "isDeleted",
           "type": "boolean",
@@ -1072,21 +1139,21 @@
         },
         "admissionClass": {
           "name": "admissionClass",
-          "type": "integer",
+          "type": "varchar(5)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "admissionSection": {
           "name": "admissionSection",
           "type": "varchar(5)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "admissionYear": {
-          "name": "admissionYear",
-          "type": "integer",
+        "admissionDate": {
+          "name": "admissionDate",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -1135,6 +1202,19 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "student_sectionId_section_id_fk": {
+          "name": "student_sectionId_section_id_fk",
+          "tableFrom": "student",
+          "tableTo": "section",
+          "columnsFrom": [
+            "sectionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1145,10 +1225,23 @@
           "columns": [
             "email"
           ]
+        },
+        "srNo_unique": {
+          "name": "srNo_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "srNo",
+            "schoolId"
+          ]
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "srNo_check": {
+          "name": "srNo_check",
+          "value": "\"student\".\"srNo\" > 0"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.studentAttendence": {
@@ -1159,7 +1252,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -1293,7 +1387,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -1426,7 +1521,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "serial": {
           "name": "serial",
@@ -1566,7 +1662,8 @@
       "values": [
         "PRESENT",
         "ABSENT",
-        "LEAVE"
+        "LEAVE",
+        "MEDICAL"
       ]
     },
     "public.classNameEnum": {

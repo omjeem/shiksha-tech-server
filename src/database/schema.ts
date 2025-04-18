@@ -40,7 +40,6 @@ export const schoolStaffRoleEnum = pgEnum(
   Object.values(SchoolStaffRole_Enum) as [string, ...string[]],
 );
 
-
 const timeStamps = {
   updated_at: timestamp(),
   created_at: timestamp().defaultNow().notNull(),
@@ -93,7 +92,7 @@ export const student = pgTable(
     srNo: integer().notNull(),
     name: varchar({ length: 255 }),
     rollNo: integer(),
-    email: varchar({ length: 255 }).notNull().unique(),
+    email: varchar({ length: 255 }).notNull(),
     password: varchar({ length: 255 }).notNull(),
     schoolId: uuid()
       .references(() => school.id, { onDelete: 'cascade' })
@@ -109,6 +108,7 @@ export const student = pgTable(
   (table) => [
     check('srNo_check', sql`${table.srNo} > 0`),
     unique('srNo_unique').on(table.srNo, table.schoolId),
+    unique('email_unique').on(table.email, table.schoolId),
   ],
 );
 
@@ -274,7 +274,6 @@ export const payment = pgTable('payment', {
   ...timeStamps,
 });
 
-
 export const schoolRelations = relations(
   school,
   ({ one, many }: { one: any; many: any }) => ({
@@ -327,7 +326,6 @@ export const classRelations = relations(
 export const studentRelations = relations(
   student,
   ({ one, many }: { one: any; many: any }) => ({
-    
     school: one(school, {
       fields: [student.schoolId],
       references: [school.id],
@@ -374,7 +372,6 @@ export const schoolStaffRelations = relations(
 export const classSectionRelations = relations(
   section,
   ({ one, many }: { one: any; many: any }) => ({
-
     school: one(school, {
       fields: [section.schoolId],
       references: [school.id],
@@ -408,7 +405,6 @@ export const classSectionRelations = relations(
 export const studentAttendanceRelations = relations(
   studentAttendence,
   ({ one }: { one: any }) => ({
-
     school: one(school, {
       fields: [studentAttendence.schoolId],
       references: [school.id],
@@ -424,7 +420,6 @@ export const studentAttendanceRelations = relations(
 export const staffAttendanceRelations = relations(
   staffAttendence,
   ({ one }: { one: any }) => ({
-    
     school: one(school, {
       fields: [staffAttendence.schoolId],
       references: [school.id],
@@ -440,7 +435,6 @@ export const staffAttendanceRelations = relations(
 export const classSubjectRelations = relations(
   subject,
   ({ one, many }: { one: any; many: any }) => ({
-    
     school: one(school, {
       fields: [subject.schoolId],
       references: [school.id],
@@ -469,7 +463,6 @@ export const classSubjectRelations = relations(
 export const classSubjectTeacherRelations = relations(
   subjectTeacher,
   ({ one }: { one: any }) => ({
-
     school: one(school, {
       fields: [subjectTeacher.schoolId],
       references: [school.id],
@@ -500,7 +493,6 @@ export const classSubjectTeacherRelations = relations(
 export const classFeesRelations = relations(
   fees,
   ({ one, many }: { one: any; many: any }) => ({
-
     school: one(school, {
       fields: [fees.schoolId],
       references: [school.id],
@@ -518,7 +510,6 @@ export const classFeesRelations = relations(
 );
 
 export const dueFeesRelations = relations(dues, ({ one }: { one: any }) => ({
-
   student: one(student, {
     fields: [dues.studentId],
     references: [student.id],
@@ -548,7 +539,6 @@ export const dueFeesRelations = relations(dues, ({ one }: { one: any }) => ({
 export const feesPaymentRelations = relations(
   payment,
   ({ one }: { one: any }) => ({
-
     student: one(student, {
       fields: [payment.studentId],
       references: [student.id],

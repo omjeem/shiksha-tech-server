@@ -14,4 +14,10 @@ studentRouter.post(
   StudentController.addStudent,
 );
 
+studentRouter.get(
+  '/',
+  validateRequest(StudentValidator.getAllStudents()),
+  StudentController.getAllStudents,
+);
+
 export default studentRouter;

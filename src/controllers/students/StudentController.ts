@@ -6,7 +6,6 @@ import { SchoolDBServices } from '../../dbServices/school/SchoolDBServices';
 
 export class StudentController {
   static addStudent: any = async (req: CustomRequest, res: Response) => {
-    console.log('addStudent');
     try {
       const body = req.body;
       const schoolId = req.user.schoolId;
@@ -15,6 +14,18 @@ export class StudentController {
       return successResponse(res, 200, 'Student created successfully', data);
     } catch (Err) {
       console.log('Error while creating the student', Err);
+      return errorResponse(res, 400, Err);
+    }
+  };
+
+  static getAllStudents: any = async (req: CustomRequest, res: Response) => {
+    try {
+      const schoolId = req.user.schoolId;
+      await SchoolDBServices.isSchoolExists(schoolId);
+      const data = await StudentDBServices.getAllStudents(schoolId);
+      return successResponse(res, 200, 'Students fetched successfully', data);
+    } catch (Err) {
+      console.log('Error in getting students ', Err);
       return errorResponse(res, 400, Err);
     }
   };

@@ -1,6 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 import { db } from '../../database/db';
 import { classes, section } from '../../database/schema';
+import { handleUniqueConstraintError } from '../../config/errors';
 
 export class SectionDBServices {
   static createSection = async (sectionBody: any, schoolId: string) => {
@@ -38,7 +39,12 @@ export class SectionDBServices {
           classTeacherId: section.classTeacherId,
         });
       return data;
-    } catch (err) {
+    } catch (err: any) {
+      if (err.code === '23505') {
+        handleUniqueConstraintError(err, {
+          sectionName: 'Section name already exists.',
+        });
+      }
       throw err;
     }
   };

@@ -25,4 +25,12 @@ export class StudentValidator {
       }),
     });
   };
+
+  static getAllStudents = () => {
+    return z.object({
+      body: z.object({}),
+      params: z.object({}),
+      query: z.object({}),
+    });
+  };
 }

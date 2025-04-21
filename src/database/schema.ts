@@ -92,14 +92,18 @@ export const student = pgTable(
     srNo: integer().notNull(),
     name: varchar({ length: 255 }),
     rollNo: integer(),
-    dob : date(),
+    dob: date(),
     email: varchar({ length: 255 }).notNull(),
     password: varchar({ length: 255 }).notNull(),
     schoolId: uuid()
       .references(() => school.id, { onDelete: 'cascade' })
       .notNull(),
-    classId: uuid().references(() => classes.id).notNull(),
-    sectionId: uuid().references(() => section.id).notNull(),
+    classId: uuid()
+      .references(() => classes.id)
+      .notNull(),
+    sectionId: uuid()
+      .references(() => section.id)
+      .notNull(),
     isDeleted: boolean().default(false),
     admissionClass: varchar({ length: 5 }),
     admissionSection: varchar({ length: 5 }),

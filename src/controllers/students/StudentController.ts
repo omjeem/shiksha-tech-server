@@ -11,7 +11,7 @@ export class StudentController {
   static addStudent: any = async (req: CustomRequest, res: Response) => {
     try {
       const body: AddStudentBodyType = req.body;
-      const schoolId = req.user.schoolId;  
+      const schoolId = req.user.schoolId;
       const classId: string = body.classId;
       const sectionId: string | undefined = body.sectionId;
       const studentData = body.studentData;
@@ -19,15 +19,14 @@ export class StudentController {
       await SchoolDBServices.isSchoolExists(schoolId);
       await ClassDBServices.isClassExists(classId);
       await SectionDBServices.isSectionExists(sectionId);
-  
 
-      const duplicateSrNo : number[] = []
-      const duplicateEmail : string[] = []
+      const duplicateSrNo: number[] = [];
+      const duplicateEmail: string[] = [];
       const registeredStudentDataSr = new Set<number>();
       const registeredStudentDataEmail = new Set<string>();
 
-
-      const studentDataWithSrNoAndEmail = await StudentDBServices.getAllSrAndEmail(schoolId, classId);
+      const studentDataWithSrNoAndEmail =
+        await StudentDBServices.getAllSrAndEmail(schoolId, classId);
 
       studentDataWithSrNoAndEmail.forEach((student) => {
         registeredStudentDataSr.add(student.srNo);
@@ -44,14 +43,21 @@ export class StudentController {
       });
 
       if (duplicateSrNo.length > 0) {
-        return errorResponse(res, 400, `These Sr No Already registered ${duplicateSrNo}`);
+        return errorResponse(
+          res,
+          400,
+          `These Sr No Already registered ${duplicateSrNo}`,
+        );
       }
       if (duplicateEmail.length > 0) {
-        return errorResponse(res, 400, `These Email Are Already Registered ${duplicateEmail}`);
+        return errorResponse(
+          res,
+          400,
+          `These Email Are Already Registered ${duplicateEmail}`,
+        );
       }
 
-      studentData.map(student => {
-
+      studentData.map((student) => {
         const emailHeader = student.email.split('@')[0];
         const password = `${emailHeader}${student.srNo}`;
 
@@ -59,8 +65,7 @@ export class StudentController {
         student.classId = classId;
         student.sectionId = sectionId;
         student.password = password;
-      })
-
+      });
 
       const data = await StudentDBServices.createStudent(studentData);
       return successResponse(res, 200, 'Student created successfully', data);

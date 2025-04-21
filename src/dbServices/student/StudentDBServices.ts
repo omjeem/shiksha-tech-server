@@ -7,18 +7,15 @@ import { SchoolDBServices } from '../school/SchoolDBServices';
 export class StudentDBServices {
   static createStudent = async (studentData: any) => {
     try {
-      const response = await db
-        .insert(student)
-        .values(studentData)
-        .returning({
-          id: student.id,
-          srNo: student.srNo,
-          name: student.name,
-          rollNo: student.rollNo,
-          email: student.email,
-          classId: student.classId,
-          sectionId: student.sectionId,
-        });
+      const response = await db.insert(student).values(studentData).returning({
+        id: student.id,
+        srNo: student.srNo,
+        name: student.name,
+        rollNo: student.rollNo,
+        email: student.email,
+        classId: student.classId,
+        sectionId: student.sectionId,
+      });
       return response;
     } catch (Err: any) {
       if (Err.code === '23505') {
@@ -31,7 +28,7 @@ export class StudentDBServices {
     }
   };
 
-  static getAllSrAndEmail = async (schoolId: string, classId : string) => {
+  static getAllSrAndEmail = async (schoolId: string, classId: string) => {
     try {
       const response = await db
         .select({
@@ -44,7 +41,7 @@ export class StudentDBServices {
     } catch (Err) {
       throw Err;
     }
-  }
+  };
 
   static getAllStudents = async (schoolId: string) => {
     try {

@@ -45,4 +45,21 @@ export class ClassDBServices {
       throw err;
     }
   };
+
+  static isClassExists = async (classId: string | undefined) => {
+    try {
+      if (!classId) throw 'CLass Id Not Found';
+      const response = await db
+        .select()
+        .from(classes)
+        .where(eq(classes.id, classId));
+
+      if (response.length === 0) {
+        throw 'Class does not exist';
+      }
+      return true;
+    } catch (Err) {
+      throw Err;
+    }
+  };
 }

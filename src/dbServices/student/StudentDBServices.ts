@@ -5,36 +5,11 @@ import { student } from '../../database/schema';
 import { SchoolDBServices } from '../school/SchoolDBServices';
 
 export class StudentDBServices {
-  static createStudent = async (schoolId: string, studentData: any) => {
+  static createStudent = async (studentData: any) => {
     try {
-      const {
-        srNo,
-        name,
-        rollNo,
-        email,
-        password,
-        classId,
-        sectionId,
-        admissionClass,
-        admissionSection,
-        admissionDate,
-      } = studentData;
-
       const response = await db
         .insert(student)
-        .values({
-          schoolId,
-          srNo,
-          name,
-          rollNo,
-          email,
-          password,
-          classId,
-          sectionId,
-          admissionClass,
-          admissionSection,
-          admissionDate,
-        })
+        .values(studentData)
         .returning({
           id: student.id,
           srNo: student.srNo,
@@ -55,6 +30,21 @@ export class StudentDBServices {
       throw Err;
     }
   };
+
+  static getAllSrAndEmail = async (schoolId: string, classId : string) => {
+    try {
+      const response = await db
+        .select({
+          srNo: student.srNo,
+          email: student.email,
+        })
+        .from(student)
+        .where(eq(student.schoolId, schoolId));
+      return response;
+    } catch (Err) {
+      throw Err;
+    }
+  }
 
   static getAllStudents = async (schoolId: string) => {
     try {

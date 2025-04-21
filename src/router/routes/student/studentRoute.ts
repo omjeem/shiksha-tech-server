@@ -10,13 +10,13 @@ studentRouter.use(authMiddleware);
 
 studentRouter.post(
   '/',
-  validateRequest(StudentValidator.addStudent()),
+  validateRequest(StudentValidator.addStudent),
   StudentController.addStudent,
 );
 
 studentRouter.get(
   '/',
-  validateRequest(StudentValidator.getAllStudents()),
+  validateRequest(StudentValidator.getAllStudents),
   StudentController.getAllStudents,
 );
 

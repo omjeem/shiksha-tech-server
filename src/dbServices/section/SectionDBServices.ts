@@ -70,4 +70,21 @@ export class SectionDBServices {
       throw err;
     }
   };
+
+  static isSectionExists = async (sectionId: string | undefined) => {
+    try {
+      if (!sectionId) throw 'Section Id Not Found';
+      const response = await db
+        .select()
+        .from(section)
+        .where(eq(section.id, sectionId));
+
+      if (response.length === 0) {
+        throw 'Section not exist';
+      }
+      return true;
+    } catch (Err) {
+      throw Err;
+    }
+  };
 }

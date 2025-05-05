@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { SchoolBoard_Enum } from '../../utils/interfaces';
 
-class SchoolValidator {
+export class SchoolValidator {
   static createSchool = () => {
     return z.object({
       body: z.object({
@@ -22,5 +22,3 @@ class SchoolValidator {
     });
   };
 }
-
-export default SchoolValidator;

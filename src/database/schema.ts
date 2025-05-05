@@ -18,6 +18,7 @@ import {
   ClassName_Enum,
   SchoolBoard_Enum,
   SchoolStaffRole_Enum,
+  StudentGender_Enum,
 } from '../utils/interfaces';
 
 export const classNameEnum = pgEnum(
@@ -38,6 +39,11 @@ export const attendenceEnum = pgEnum(
 export const schoolStaffRoleEnum = pgEnum(
   'schoolStaffRoleEnum',
   Object.values(SchoolStaffRole_Enum) as [string, ...string[]],
+);
+
+export const studentGenderEnum = pgEnum(
+  'studentGenderEnum',
+  Object.values(StudentGender_Enum) as [string, ...string[]],
 );
 
 const timeStamps = {
@@ -92,6 +98,8 @@ export const student = pgTable(
     srNo: integer().notNull(),
     name: varchar({ length: 255 }),
     rollNo: integer(),
+    address: varchar({ length: 255 }),
+    gender: studentGenderEnum().notNull(),
     dob: date(),
     email: varchar({ length: 255 }).notNull(),
     password: varchar({ length: 255 }).notNull(),
@@ -108,6 +116,12 @@ export const student = pgTable(
     admissionClass: varchar({ length: 5 }),
     admissionSection: varchar({ length: 5 }),
     admissionDate: date(),
+    fatherName: varchar({ length: 255 }),
+    fatherContact: varchar({ length: 15 }),
+    fatherEmail: varchar({ length: 255 }),
+    motherName: varchar({ length: 255 }),
+    motherContact: varchar({ length: 15 }),
+    motherEmail: varchar({ length: 255 }),
     ...timeStamps,
   },
   (table) => [

@@ -7,6 +7,12 @@ export enum SchoolBoard_Enum {
   IB = 'IB',
 }
 
+export enum StudentGender_Enum {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}
+
 export enum Attendence_Enum {
   PRESENT = 'PRESENT',
   ABSENT = 'ABSENT',

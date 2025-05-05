@@ -1,17 +1,18 @@
 import Express from 'express';
 import { validateRequest } from '../../../middleware/zodValidator';
 import authMiddleware from '../../../middleware/authMiddleware';
-import { SchoolController } from '../../../controllers/school/SchoolController';
-import SchoolValidator from '../../../validator/school/SchoolValidator';
+import validators from '../../../validator';
+import controllers from '../../../controllers';
 
 const schoolRouter = Express.Router();
 
 schoolRouter.post(
   '/',
-  validateRequest(SchoolValidator.createSchool()),
-  SchoolController.createSchool,
+  validateRequest(validators.SchoolValidator.createSchool()),
+  controllers.SchoolController.createSchool,
 );
+schoolRouter.get('/list', controllers.SchoolController.getSchoolList);
 
-schoolRouter.get('/', authMiddleware, SchoolController.getDetails);
+schoolRouter.get('/', authMiddleware, controllers.SchoolController.getDetails);
 
 export default schoolRouter;

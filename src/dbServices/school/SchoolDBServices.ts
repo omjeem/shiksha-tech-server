@@ -100,4 +100,16 @@ export class SchoolDBServices {
       throw Err;
     }
   };
+
+  static getSchoolList = async () => {
+    try {
+      const response = await db
+        .select({ id: school.id, name: school.schoolName })
+        .from(school)
+        .where(eq(school.isVerified, true));
+      return response;
+    } catch (err: any) {
+      throw Error(err);
+    }
+  };
 }

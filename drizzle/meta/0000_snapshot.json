@@ -1,5 +1,5 @@
 {
-  "id": "11f6412d-64f2-441a-bdf3-d5003ffbaa61",
+  "id": "e6186383-0878-4d90-ac68-c1ff98278066",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1100,6 +1100,25 @@
           "primaryKey": false,
           "notNull": false
         },
+        "address": {
+          "name": "address",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gender": {
+          "name": "gender",
+          "type": "studentGenderEnum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dob": {
+          "name": "dob",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
         "email": {
           "name": "email",
           "type": "varchar(255)",
@@ -1122,13 +1141,13 @@
           "name": "classId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "sectionId": {
           "name": "sectionId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "isDeleted": {
           "name": "isDeleted",
@@ -1152,6 +1171,42 @@
         "admissionDate": {
           "name": "admissionDate",
           "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fatherName": {
+          "name": "fatherName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fatherContact": {
+          "name": "fatherContact",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fatherEmail": {
+          "name": "fatherEmail",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motherName": {
+          "name": "motherName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motherContact": {
+          "name": "motherContact",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motherEmail": {
+          "name": "motherEmail",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -1219,18 +1274,19 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "student_email_unique": {
-          "name": "student_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        },
         "srNo_unique": {
           "name": "srNo_unique",
           "nullsNotDistinct": false,
           "columns": [
             "srNo",
+            "schoolId"
+          ]
+        },
+        "email_unique": {
+          "name": "email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email",
             "schoolId"
           ]
         }
@@ -1716,6 +1772,15 @@
         "GARDENER",
         "COOK",
         "HELPER"
+      ]
+    },
+    "public.studentGenderEnum": {
+      "name": "studentGenderEnum",
+      "schema": "public",
+      "values": [
+        "MALE",
+        "FEMALE",
+        "OTHER"
       ]
     }
   },

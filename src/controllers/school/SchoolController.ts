@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { errorResponse, successResponse } from '../../config/response';
 import { CustomRequest, SchoolStaffRole_Enum } from '../../utils/interfaces';
 import { SchoolDBServices } from '../../dbServices/school/SchoolDBServices';
+import dbServices from '../../dbServices';
 
 export class SchoolController {
   static createSchool = async (req: Request, res: Response): Promise<any> => {
@@ -45,6 +46,20 @@ export class SchoolController {
       );
     } catch (Err) {
       return errorResponse(res, 500, Err);
+    }
+  };
+
+  static getSchoolList: any = async (req: Request, res: Response) => {
+    try {
+      const data = await dbServices.SchoolDBServices.getSchoolList();
+      return successResponse(
+        res,
+        200,
+        'School List Fetched Successfully!',
+        data,
+      );
+    } catch (err) {
+      return errorResponse(res, 500, err);
     }
   };
 }

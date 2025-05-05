@@ -2,6 +2,7 @@ CREATE TYPE "public"."attendenceEnum" AS ENUM('PRESENT', 'ABSENT', 'LEAVE', 'MED
 CREATE TYPE "public"."classNameEnum" AS ENUM('PLAYGROUP', 'NURSERY', 'LKG', 'UKG', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'ELEVEN', 'TWELVE');--> statement-breakpoint
 CREATE TYPE "public"."schoolBoardEnum" AS ENUM('CBSE', 'ICSE', 'STATE', 'IB');--> statement-breakpoint
 CREATE TYPE "public"."schoolStaffRoleEnum" AS ENUM('SUPER_ADMIN', 'TEACHER', 'ADMIN', 'ACCOUNTANT', 'MANAGER', 'LIBRARIAN', 'PEON', 'DRIVER', 'SECURITY', 'CLEANER', 'GATEKEEPER', 'GARDENER', 'COOK', 'HELPER');--> statement-breakpoint
+CREATE TYPE "public"."studentGenderEnum" AS ENUM('MALE', 'FEMALE', 'OTHER');--> statement-breakpoint
 CREATE TABLE "classes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"serial" serial NOT NULL,
@@ -139,20 +140,29 @@ CREATE TABLE "student" (
 	"srNo" integer NOT NULL,
 	"name" varchar(255),
 	"rollNo" integer,
+	"address" varchar(255),
+	"gender" "studentGenderEnum" NOT NULL,
+	"dob" date,
 	"email" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,
 	"schoolId" uuid NOT NULL,
-	"classId" uuid,
-	"sectionId" uuid,
+	"classId" uuid NOT NULL,
+	"sectionId" uuid NOT NULL,
 	"isDeleted" boolean DEFAULT false,
 	"admissionClass" varchar(5),
 	"admissionSection" varchar(5),
 	"admissionDate" date,
+	"fatherName" varchar(255),
+	"fatherContact" varchar(15),
+	"fatherEmail" varchar(255),
+	"motherName" varchar(255),
+	"motherContact" varchar(15),
+	"motherEmail" varchar(255),
 	"updated_at" timestamp,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp,
-	CONSTRAINT "student_email_unique" UNIQUE("email"),
 	CONSTRAINT "srNo_unique" UNIQUE("srNo","schoolId"),
+	CONSTRAINT "email_unique" UNIQUE("email","schoolId"),
 	CONSTRAINT "srNo_check" CHECK ("student"."srNo" > 0)
 );
 --> statement-breakpoint

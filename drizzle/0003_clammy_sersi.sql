@@ -1,0 +1,1 @@
+ALTER TABLE "student" ADD COLUMN "contactNumber" varchar(20);

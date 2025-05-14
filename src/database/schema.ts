@@ -103,6 +103,7 @@ export const student = pgTable(
     dob: date(),
     email: varchar({ length: 255 }).notNull(),
     password: varchar({ length: 255 }).notNull(),
+    contactNumber: varchar({ length: 20 }),
     schoolId: uuid()
       .references(() => school.id, { onDelete: 'cascade' })
       .notNull(),

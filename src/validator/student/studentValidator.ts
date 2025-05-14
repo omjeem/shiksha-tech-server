@@ -1,10 +1,11 @@
-import { z } from 'zod';
+import { string, z } from 'zod';
+import { StudentGender_Enum } from '../../utils/interfaces';
 
 export class StudentValidator {
   static addStudent = z.object({
     body: z.object({
       classId: z.string().uuid(),
-      sectionId: z.string().uuid().optional(),
+      sectionId: z.string().uuid(),
       studentData: z
         .array(
           z.object({
@@ -13,23 +14,25 @@ export class StudentValidator {
             rollNo: z.number().min(1),
             email: z.string().email().max(224),
             dob: z.coerce.date().optional(),
-            schoolId: z.string().uuid().optional(),
+            address: z.string().min(2),
+            gender: z.enum([
+              ...Object.values(StudentGender_Enum) as [string, ...string[]]
+            ]),
+            contactNumber : z.string().optional(),
             password: z
-              .string()
-              .min(8, {
-                message: 'Password must be at least 8 characters long',
-              })
-              .regex(/[A-Z]/, {
-                message: 'Password must contain at least one uppercase letter',
-              })
-              .regex(/[a-z]/, {
-                message: 'Password must contain at least one lowercase letter',
-              }),
+              .string().optional(),
+            schoolId: z.string().optional(),
             classId: z.string().uuid().optional(),
             sectionId: z.string().uuid().optional(),
-            admissionClass: z.string().min(1).optional(),
-            admissionSection: z.string().min(1).optional(),
+            admissionClass: z.string().optional(),
+            admissionSection: z.string().optional(),
             admissionDate: z.coerce.date().optional(),
+            fatherName: z.string().min(2),
+            fatherContact: z.string().min(2),
+            fatherEmail: z.string().min(2),
+            motherName: z.string().min(2),
+            motherContact: z.string().min(2),
+            motherEmail: z.string().min(2),
           }),
         )
         .nonempty({

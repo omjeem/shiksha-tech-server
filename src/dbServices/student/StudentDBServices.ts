@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { handleUniqueConstraintError } from '../../config/errors';
 import { db } from '../../database/db';
 import { student } from '../../database/schema';
@@ -12,9 +12,18 @@ export class StudentDBServices {
         srNo: student.srNo,
         name: student.name,
         rollNo: student.rollNo,
+        address: student.address,
+        gender: student.gender,
+        dob: student.dob,
         email: student.email,
         classId: student.classId,
         sectionId: student.sectionId,
+        fatherName: student.fatherName,
+        fatherContact: student.fatherContact,
+        fatherEmail: student.fatherEmail,
+        motherName: student.motherName,
+        motherContact: student.motherContact,
+        motherEmail: student.motherEmail
       });
       return response;
     } catch (Err: any) {
@@ -63,4 +72,19 @@ export class StudentDBServices {
       throw Err;
     }
   };
+
+  static lastSrNo = async (schoolId: string) => {
+    try {
+      const response = await db
+        .select({ srNo: student.srNo })
+        .from(student)
+        .where(eq(student.schoolId, schoolId))
+        .orderBy(desc(student.srNo))
+        .limit(1)
+        
+      return response
+    } catch (error) {
+      throw error
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { CustomRequest } from '../../utils/interfaces';
 import { StudentDBServices } from '../../dbServices/student/StudentDBServices';
 import { errorResponse, successResponse } from '../../config/response';
@@ -6,6 +6,7 @@ import { SchoolDBServices } from '../../dbServices/school/SchoolDBServices';
 import { AddStudentBodyType } from '../../config/zodTypes';
 import { ClassDBServices } from '../../dbServices/class/ClassDBServices';
 import { SectionDBServices } from '../../dbServices/section/SectionDBServices';
+import dbServices from '../../dbServices';
 
 export class StudentController {
   static addStudent: any = async (req: CustomRequest, res: Response) => {
@@ -19,44 +20,53 @@ export class StudentController {
       await SchoolDBServices.isSchoolExists(schoolId);
       await ClassDBServices.isClassExists(classId);
       await SectionDBServices.isSectionExists(sectionId);
+      
+      if (studentData.length > 1) {
+        const duplicateSrNo: number[] = [];
+        const duplicateEmail: string[] = [];
+        const registeredStudentDataSr = new Set<number>();
+        const registeredStudentDataEmail = new Set<string>();
 
-      const duplicateSrNo: number[] = [];
-      const duplicateEmail: string[] = [];
-      const registeredStudentDataSr = new Set<number>();
-      const registeredStudentDataEmail = new Set<string>();
+        const studentDataWithSrNoAndEmail =
+          await StudentDBServices.getAllSrAndEmail(schoolId, classId);
 
-      const studentDataWithSrNoAndEmail =
-        await StudentDBServices.getAllSrAndEmail(schoolId, classId);
+        studentDataWithSrNoAndEmail.forEach((student) => {
+          registeredStudentDataSr.add(student.srNo);
+          registeredStudentDataEmail.add(student.email);
+        });
 
-      studentDataWithSrNoAndEmail.forEach((student) => {
-        registeredStudentDataSr.add(student.srNo);
-        registeredStudentDataEmail.add(student.email);
-      });
+        studentData.forEach((student) => {
+          if (registeredStudentDataSr.has(student.srNo)) {
+            duplicateSrNo.push(student.srNo);
+          }
+          if (registeredStudentDataEmail.has(student.email)) {
+            duplicateEmail.push(student.email);
+          }
+        });
 
-      studentData.forEach((student) => {
-        if (registeredStudentDataSr.has(student.srNo)) {
-          duplicateSrNo.push(student.srNo);
+        if (duplicateSrNo.length > 0) {
+          return errorResponse(
+            res,
+            400,
+            `These Sr No Already registered ${duplicateSrNo}`,
+          );
         }
-        if (registeredStudentDataEmail.has(student.email)) {
-          duplicateEmail.push(student.email);
+        if (duplicateEmail.length > 0) {
+          return errorResponse(
+            res,
+            400,
+            `These Email Are Already Registered ${duplicateEmail}`,
+          );
         }
-      });
 
-      if (duplicateSrNo.length > 0) {
-        return errorResponse(
-          res,
-          400,
-          `These Sr No Already registered ${duplicateSrNo}`,
-        );
+      } else {
+        const lastSr = await dbServices.StudentDBServices.lastSrNo(schoolId)
+        let sr = 1;
+        if (!lastSr || lastSr.length > 0) {
+          sr = lastSr[0].srNo + 1
+        }
+        studentData[0].srNo = sr
       }
-      if (duplicateEmail.length > 0) {
-        return errorResponse(
-          res,
-          400,
-          `These Email Are Already Registered ${duplicateEmail}`,
-        );
-      }
-
       studentData.map((student) => {
         const emailHeader = student.email.split('@')[0];
         const password = `${emailHeader}${student.srNo}`;
@@ -64,7 +74,7 @@ export class StudentController {
         student.schoolId = schoolId;
         student.classId = classId;
         student.sectionId = sectionId;
-        student.password = password;
+        if (!student.password || student.password === "") student.password = password;
       });
 
       const data = await StudentDBServices.createStudent(studentData);

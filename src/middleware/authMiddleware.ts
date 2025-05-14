@@ -2,6 +2,9 @@ import { NextFunction, Response } from 'express';
 import { errorResponse } from '../config/response';
 import { verifyToken } from '../config/jwt';
 import { CustomRequest } from '../utils/interfaces';
+import { AUTH_TOKEN } from '../utils/constants';
+import { handleError, throwError } from '../config/error';
+import { ErrorTypes } from '../utils/errorEnums';
 
 const authMiddleware: any = (
   req: CustomRequest,
@@ -9,23 +12,20 @@ const authMiddleware: any = (
   next: NextFunction,
 ) => {
   try {
-    const token = req.headers.authorization;
+    const token = req.cookies[AUTH_TOKEN]
     if (!token) {
-      return errorResponse(res, 401, 'Token not found');
+      throwError(ErrorTypes.INVALID_TOKEN)
     }
-    const tokenArray = token.split(' ');
-    if (tokenArray.length !== 2 || tokenArray[0] !== 'Bearer') {
-      return errorResponse(res, 401, 'Invalid Token');
-    }
-    const decoded: any = verifyToken(tokenArray[1]);
+    const decoded: any = verifyToken(token);
     if (!decoded) {
-      return errorResponse(res, 401, 'Unauthorided User Invalid Token');
+      throwError(ErrorTypes.INVALID_TOKEN)
     }
-
+    console.log("Decoded is >>>> ", decoded)
     req.user = decoded;
     next();
   } catch (Err) {
-    return errorResponse(res, 401, Err);
+    const { status, message } = handleError(Err)
+    return errorResponse(res, status, message);
   }
 };
 

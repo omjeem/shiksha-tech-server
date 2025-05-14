@@ -35,6 +35,8 @@ export enum SchoolStaffRole_Enum {
   GARDENER = 'GARDENER',
   COOK = 'COOK',
   HELPER = 'HELPER',
+  STUDENT = "STUDENT",
+  PARENTS = "PARENTS"
 }
 
 export enum ClassName_Enum {

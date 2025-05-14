@@ -3,23 +3,31 @@ import { errorResponse, successResponse } from '../../config/response';
 import dbServices from '../../dbServices';
 import { SchoolStaffRole_Enum } from '../../utils/interfaces';
 import { generateToken } from '../../config/jwt';
+import { handleError } from '../../config/error';
+import { AUTH_TOKEN } from '../../utils/constants';
+import { envConfigs } from '../../config/envConfig';
 
 export class Auth {
   static login: any = async (req: Request, res: Response) => {
     try {
-      const response = await dbServices.Auth.login(req.body);
-      console.log('Response is ', response);
-      const payload = {
-        id: response.Id,
-        role: SchoolStaffRole_Enum.SUPER_ADMIN,
-      };
+      const payload = await dbServices.Auth.login(req.body);
       const token = generateToken(payload);
-      return successResponse(res, 200, 'User Logged in Successfully', {
-        token,
-      });
+      res.cookie(AUTH_TOKEN, token, {
+        httpOnly: false,        
+        secure: false,          
+        sameSite: "lax",     
+        maxAge: envConfigs.jwt_expires_in,
+        path: "/",
+      })
+      return successResponse(
+        res,
+        200,
+        'User Logged in Successfully',
+      );
     } catch (err: any) {
       console.log('Error>>>', err);
-      return errorResponse(res, 500, err);
+      const { status, message } = handleError(err)
+      return errorResponse(res, status, message);
     }
   };
 }

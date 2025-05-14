@@ -6,7 +6,7 @@ export class AuthValidator {
     body: z.object({
       email: z.string(),
       password: z.string(),
-      schoolId: z.string().optional(),
+      schoolId: z.string(),
       role: z.enum([
         ...(Object.values(SchoolStaffRole_Enum) as [string, ...string[]]),
       ]),

@@ -83,8 +83,8 @@ export const classes = pgTable(
       .references(() => school.id, { onDelete: 'cascade' })
       .notNull(),
     className: classNameEnum('className').notNull(),
-    totalSection: integer().notNull(),
-    totalStudent: integer().notNull(),
+    totalSection: integer().notNull().default(0),
+    totalStudent: integer().notNull().default(0),
     ...timeStamps,
   },
   (table) => [unique('unique_class').on(table.className, table.schoolId)],
@@ -164,7 +164,7 @@ export const section: any = pgTable(
     classTeacherId: uuid().references(() => staff.id),
     ...timeStamps,
   },
-  (table) => [unique('unique_section').on(table.sectionName, table.schoolId)],
+  (table) => [unique('unique_section').on(table.sectionName, table.classId)],
 );
 
 export const studentAttendence = pgTable('studentAttendence', {

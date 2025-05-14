@@ -8,8 +8,8 @@ export class ClassValidator {
         className: z.enum([
           ...(Object.values(ClassName_Enum) as [string, ...string[]]),
         ]),
-        totalSection: z.number(),
-        totalStudent: z.number(),
+        totalSection: z.number().optional(),
+        totalStudent: z.number().optional(),
       }),
     });
   };

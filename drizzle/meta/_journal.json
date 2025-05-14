@@ -8,6 +8,20 @@
       "when": 1745710576034,
       "tag": "0000_mixed_boomer",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1747055248741,
+      "tag": "0001_bumpy_wong",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747201585077,
+      "tag": "0002_lyrical_nightmare",
+      "breakpoints": true
     }
   ]
 }

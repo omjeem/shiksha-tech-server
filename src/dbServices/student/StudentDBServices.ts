@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import { handleUniqueConstraintError } from '../../config/errors';
 import { db } from '../../database/db';
 import { student } from '../../database/schema';
@@ -52,26 +52,63 @@ export class StudentDBServices {
     }
   };
 
-  static getAllStudents = async (schoolId: string) => {
+  static getAllStudents = async (schoolId: string, page: number = 1) => {
     try {
-      const response = await db
-        .select({
-          id: student.id,
-          srNo: student.srNo,
-          name: student.name,
-          rollNo: student.rollNo,
-          email: student.email,
-          classId: student.classId,
-          sectionId: student.sectionId,
-        })
-        .from(student)
-        .limit(10)
-        .where(eq(student.schoolId, schoolId));
+      const limit = 10;
+      const offset = (page - 1) * limit;
+
+      // const response = await db
+      //   .select({
+      //     id: student.id,
+      //     srNo: student.srNo,
+      //     name: student.name,
+      //     rollNo: student.rollNo,
+      //     email: student.email,
+      //     classId: student.classId,
+      //     sectionId: student.sectionId,
+      //   })
+      //   .from(student)
+      //   .where(eq(student.schoolId, schoolId))
+      //   .orderBy(student.srNo)
+      //   .limit(limit)
+      //   .offset(offset);
+
+      const response = await db.query.student.findMany({
+        where: (eq(student.schoolId, schoolId)),
+        orderBy: (student) => [asc(student.srNo)],
+        limit,
+        offset,
+        columns: {
+          id: true,
+          srNo: true,
+          name: true,
+          rollNo: true,
+          email: true,
+        },
+        with: {
+          class: {
+            columns: {
+              id: true,
+              className: true
+            }
+          },
+          section: {
+            columns: {
+              id: true,
+              sectionName: true
+            }
+          }
+        }
+      });
+
+
+
       return response;
-    } catch (Err) {
-      throw Err;
+    } catch (err) {
+      throw err;
     }
   };
+
 
   static lastSrNo = async (schoolId: string) => {
     try {
@@ -81,7 +118,7 @@ export class StudentDBServices {
         .where(eq(student.schoolId, schoolId))
         .orderBy(desc(student.srNo))
         .limit(1)
-        
+
       return response
     } catch (error) {
       throw error

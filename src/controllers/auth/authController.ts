@@ -15,7 +15,7 @@ export class Auth {
       res.cookie(AUTH_TOKEN, token, {
         httpOnly: true,        
         secure: true,          
-        sameSite: "lax",     
+        sameSite: "none",     
         maxAge: envConfigs.jwt_expires_in,
         path: "/",
       })

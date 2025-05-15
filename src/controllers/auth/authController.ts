@@ -13,8 +13,8 @@ export class Auth {
       const payload = await dbServices.Auth.login(req.body);
       const token = generateToken(payload);
       res.cookie(AUTH_TOKEN, token, {
-        httpOnly: false,        
-        secure: false,          
+        httpOnly: true,        
+        secure: true,          
         sameSite: "lax",     
         maxAge: envConfigs.jwt_expires_in,
         path: "/",

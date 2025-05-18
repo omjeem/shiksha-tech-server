@@ -17,7 +17,7 @@ export class ClassController {
 
   static getAllClasses: any = async (req: CustomRequest, res: Response) => {
     try {
-      console.log("User is >>> ", req.user)
+      console.log('User is >>> ', req.user);
       const schoolId = req.user.schoolId;
       if (!schoolId) {
         return errorResponse(res, 400, 'School Id not found');

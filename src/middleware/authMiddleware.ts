@@ -12,19 +12,19 @@ const authMiddleware: any = (
   next: NextFunction,
 ) => {
   try {
-    const token = req.cookies[AUTH_TOKEN]
+    const token = req.cookies[AUTH_TOKEN];
     if (!token) {
-      throwError(ErrorTypes.INVALID_TOKEN)
+      throwError(ErrorTypes.INVALID_TOKEN);
     }
     const decoded: any = verifyToken(token);
     if (!decoded) {
-      throwError(ErrorTypes.INVALID_TOKEN)
+      throwError(ErrorTypes.INVALID_TOKEN);
     }
-    console.log("Decoded is >>>> ", decoded)
+    console.log('Decoded is >>>> ', decoded);
     req.user = decoded;
     next();
   } catch (Err) {
-    const { status, message } = handleError(Err)
+    const { status, message } = handleError(Err);
     return errorResponse(res, status, message);
   }
 };

@@ -5,6 +5,4 @@ import controllers from '../../../controllers';
 
 const superAdminRouter = Express.Router();
 
-
-
 export default superAdminRouter;

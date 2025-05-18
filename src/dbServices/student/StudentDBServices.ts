@@ -23,7 +23,7 @@ export class StudentDBServices {
         fatherEmail: student.fatherEmail,
         motherName: student.motherName,
         motherContact: student.motherContact,
-        motherEmail: student.motherEmail
+        motherEmail: student.motherEmail,
       });
       return response;
     } catch (Err: any) {
@@ -74,7 +74,7 @@ export class StudentDBServices {
       //   .offset(offset);
 
       const response = await db.query.student.findMany({
-        where: (eq(student.schoolId, schoolId)),
+        where: eq(student.schoolId, schoolId),
         orderBy: (student) => [asc(student.srNo)],
         limit,
         offset,
@@ -89,26 +89,23 @@ export class StudentDBServices {
           class: {
             columns: {
               id: true,
-              className: true
-            }
+              className: true,
+            },
           },
           section: {
             columns: {
               id: true,
-              sectionName: true
-            }
-          }
-        }
+              sectionName: true,
+            },
+          },
+        },
       });
-
-
 
       return response;
     } catch (err) {
       throw err;
     }
   };
-
 
   static lastSrNo = async (schoolId: string) => {
     try {
@@ -117,11 +114,11 @@ export class StudentDBServices {
         .from(student)
         .where(eq(student.schoolId, schoolId))
         .orderBy(desc(student.srNo))
-        .limit(1)
+        .limit(1);
 
-      return response
+      return response;
     } catch (error) {
-      throw error
+      throw error;
     }
-  }
+  };
 }

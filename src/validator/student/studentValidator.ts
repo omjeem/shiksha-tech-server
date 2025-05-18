@@ -16,11 +16,10 @@ export class StudentValidator {
             dob: z.coerce.date().optional(),
             address: z.string().min(2),
             gender: z.enum([
-              ...Object.values(StudentGender_Enum) as [string, ...string[]]
+              ...(Object.values(StudentGender_Enum) as [string, ...string[]]),
             ]),
-            contactNumber : z.string().optional(),
-            password: z
-              .string().optional(),
+            contactNumber: z.string().optional(),
+            password: z.string().optional(),
             schoolId: z.string().optional(),
             classId: z.string().uuid().optional(),
             sectionId: z.string().uuid().optional(),

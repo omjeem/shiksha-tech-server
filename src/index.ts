@@ -5,19 +5,21 @@ import mainRouter from './router';
 import { connectToDatabase } from './database/db';
 import cors from 'cors';
 import apiDocs from './config/swagger';
-import cookieParser from "cookie-parser"
+import cookieParser from 'cookie-parser';
 import authMiddleware from './middleware/authMiddleware';
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 
-app.use(cors({
-  origin: ["http://localhost:3000", "https://shiksha-tech-web.vercel.app"],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  // allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(
+  cors({
+    origin: ['http://localhost:3000', 'https://shiksha-tech-web.vercel.app'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    // allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 app.get('/', (req, res) => {
   res.send('Welcome to our School Management Api');

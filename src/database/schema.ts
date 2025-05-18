@@ -359,6 +359,7 @@ export const studentRelations = relations(
     section: one(section, {
       fields: [student.sectionId],
       references: [section.id],
+      relationName: 'studentSection',
     }),
 
     monitoringSections: many(section, { relationName: 'classMonitor' }),
@@ -415,6 +416,8 @@ export const classSectionRelations = relations(
     }),
 
     subjects: many(subject),
+
+    student: many(student, { relationName: 'studentSection' }),
 
     dueFees: many(dues),
 

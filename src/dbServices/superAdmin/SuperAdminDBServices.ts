@@ -12,8 +12,8 @@ export class SuperAdminDBServices {
         eq(school.superAdminPassword, password),
       ),
     });
-    if (!user) return throwError(ErrorTypes.INVALID_CREDENTIALS)
-    if (!user.isVerified) return throwError(ErrorTypes.SCHOOL_UNVERIFIED)
+    if (!user) return throwError(ErrorTypes.INVALID_CREDENTIALS);
+    if (!user.isVerified) return throwError(ErrorTypes.SCHOOL_UNVERIFIED);
     return user.id;
   };
 }

@@ -13,20 +13,16 @@ export class Auth {
       const payload = await dbServices.Auth.login(req.body);
       const token = generateToken(payload);
       res.cookie(AUTH_TOKEN, token, {
-        httpOnly: true,        
-        secure: true,          
-        sameSite: "none",     
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         maxAge: envConfigs.jwt_expires_in,
-        path: "/",
-      })
-      return successResponse(
-        res,
-        200,
-        'User Logged in Successfully',
-      );
+        path: '/',
+      });
+      return successResponse(res, 200, 'User Logged in Successfully');
     } catch (err: any) {
       console.log('Error>>>', err);
-      const { status, message } = handleError(err)
+      const { status, message } = handleError(err);
       return errorResponse(res, status, message);
     }
   };

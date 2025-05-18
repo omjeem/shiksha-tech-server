@@ -20,7 +20,7 @@ export class StudentController {
       await SchoolDBServices.isSchoolExists(schoolId);
       await ClassDBServices.isClassExists(classId);
       await SectionDBServices.isSectionExists(sectionId);
-      
+
       if (studentData.length > 1) {
         const duplicateSrNo: number[] = [];
         const duplicateEmail: string[] = [];
@@ -58,14 +58,13 @@ export class StudentController {
             `These Email Are Already Registered ${duplicateEmail}`,
           );
         }
-
       } else {
-        const lastSr = await dbServices.StudentDBServices.lastSrNo(schoolId)
+        const lastSr = await dbServices.StudentDBServices.lastSrNo(schoolId);
         let sr = 1;
         if (!lastSr || lastSr.length > 0) {
-          sr = lastSr[0].srNo + 1
+          sr = lastSr[0].srNo + 1;
         }
-        studentData[0].srNo = sr
+        studentData[0].srNo = sr;
       }
       studentData.map((student) => {
         const emailHeader = student.email.split('@')[0];
@@ -74,7 +73,8 @@ export class StudentController {
         student.schoolId = schoolId;
         student.classId = classId;
         student.sectionId = sectionId;
-        if (!student.password || student.password === "") student.password = password;
+        if (!student.password || student.password === '')
+          student.password = password;
       });
 
       const data = await StudentDBServices.createStudent(studentData);

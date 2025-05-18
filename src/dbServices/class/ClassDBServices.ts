@@ -1,12 +1,12 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '../../database/db';
-import { classes, school } from '../../database/schema';
+import { classes, school, student } from '../../database/schema';
 
 export class ClassDBServices {
-  static createClass  = async (classData: any, schoolId: any) => {
+  static createClass = async (classData: any, schoolId: any) => {
     const { className, totalSection, totalStudent } = classData;
     try {
-      const response : any = await db
+      const response: any = await db
         .insert(classes)
         .values({
           className,
@@ -20,7 +20,7 @@ export class ClassDBServices {
           totalSection: classes.totalSection,
           totalStudent: classes.totalStudent,
         });
-      response[0].sections = []
+      response[0].sections = [];
       return response;
     } catch (err) {
       console.log('Error while creating class', err);
@@ -30,13 +30,30 @@ export class ClassDBServices {
 
   static getALLCLasses = async (schoolId: any) => {
     try {
-      const responseData = await db.query.classes.findMany({
-        where: (eq(classes.schoolId, schoolId)),
+      const classStudentCounts = await db
+        .select({
+          classId: student.classId,
+          count: sql<number>`count(*)`.as('count'),
+        })
+        .from(student)
+        .where(eq(student.schoolId, schoolId))
+        .groupBy(student.classId);
+
+      const sectionStudentCounts = await db
+        .select({
+          sectionId: student.sectionId,
+          count: sql<number>`count(*)`.as('count'),
+        })
+        .from(student)
+        .where(eq(student.schoolId, schoolId))
+        .groupBy(student.sectionId);
+
+      const classData = await db.query.classes.findMany({
+        where: (classes, { eq }) => eq(classes.schoolId, schoolId),
         columns: {
           id: true,
           className: true,
           totalSection: true,
-          totalStudent: true
         },
         with: {
           sections: {
@@ -44,12 +61,24 @@ export class ClassDBServices {
               id: true,
               sectionName: true,
               created_at: true,
-              totalStudent: true
-            }
-          }
-        }
-      })
-      return responseData;
+            },
+          },
+        },
+      });
+
+      const enriched = classData.map((c: any) => ({
+        ...c,
+        studentCount:
+          classStudentCounts.find((cs) => cs.classId === c.id)?.count || 0,
+        sections: c.sections.map((s: any) => ({
+          ...s,
+          studentCount:
+            sectionStudentCounts.find((ss) => ss.sectionId === s.id)?.count ||
+            0,
+        })),
+      }));
+
+      return enriched;
     } catch (err) {
       console.log('Error while getting all classes', err);
       throw err;

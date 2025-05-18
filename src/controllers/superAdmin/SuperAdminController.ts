@@ -4,6 +4,4 @@ import { generateToken } from '../../config/jwt';
 import { SchoolStaffRole_Enum } from '../../utils/interfaces';
 import { SuperAdminDBServices } from '../../dbServices/superAdmin/SuperAdminDBServices';
 
-export class SuperAdminController {
-  
-}
+export class SuperAdminController {}

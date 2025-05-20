@@ -54,24 +54,8 @@ export class StudentDBServices {
 
   static getAllStudents = async (schoolId: string, page: number = 1) => {
     try {
-      const limit = 10;
+      const limit = 20;
       const offset = (page - 1) * limit;
-
-      // const response = await db
-      //   .select({
-      //     id: student.id,
-      //     srNo: student.srNo,
-      //     name: student.name,
-      //     rollNo: student.rollNo,
-      //     email: student.email,
-      //     classId: student.classId,
-      //     sectionId: student.sectionId,
-      //   })
-      //   .from(student)
-      //   .where(eq(student.schoolId, schoolId))
-      //   .orderBy(student.srNo)
-      //   .limit(limit)
-      //   .offset(offset);
 
       const response = await db.query.student.findMany({
         where: eq(student.schoolId, schoolId),

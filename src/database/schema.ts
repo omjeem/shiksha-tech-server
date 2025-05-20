@@ -83,8 +83,6 @@ export const classes = pgTable(
       .references(() => school.id, { onDelete: 'cascade' })
       .notNull(),
     className: classNameEnum('className').notNull(),
-    totalSection: integer().notNull().default(0),
-    totalStudent: integer().notNull().default(0),
     ...timeStamps,
   },
   (table) => [unique('unique_class').on(table.className, table.schoolId)],
@@ -160,7 +158,6 @@ export const section: any = pgTable(
       .references(() => classes.id, { onDelete: 'cascade' })
       .notNull(),
     sectionName: varchar({ length: 5 }).notNull(),
-    totalStudent: integer().notNull().default(0),
     classMonitorId: uuid().references(() => student.id),
     classTeacherId: uuid().references(() => staff.id),
     ...timeStamps,

@@ -10,15 +10,11 @@ export class ClassDBServices {
         .insert(classes)
         .values({
           className,
-          totalSection,
-          totalStudent,
           schoolId,
         })
         .returning({
           id: classes.id,
           className: classes.className,
-          totalSection: classes.totalSection,
-          totalStudent: classes.totalStudent,
         });
       response[0].sections = [];
       return response;
@@ -53,7 +49,6 @@ export class ClassDBServices {
         columns: {
           id: true,
           className: true,
-          totalSection: true,
         },
         with: {
           sections: {
@@ -66,19 +61,19 @@ export class ClassDBServices {
         },
       });
 
-      const enriched = classData.map((c: any) => ({
+      const data = classData.map((c: any) => ({
         ...c,
-        studentCount:
-          classStudentCounts.find((cs) => cs.classId === c.id)?.count || 0,
+        totalStudent:
+          parseInt(String(classStudentCounts.find((cs) => cs.classId === c.id)?.count || 0)),
         sections: c.sections.map((s: any) => ({
           ...s,
-          studentCount:
-            sectionStudentCounts.find((ss) => ss.sectionId === s.id)?.count ||
-            0,
+          totalStudent:
+            parseInt(String(sectionStudentCounts.find((ss) => ss.sectionId === s.id)?.count ||
+              0)),
         })),
       }));
 
-      return enriched;
+      return data;
     } catch (err) {
       console.log('Error while getting all classes', err);
       throw err;
